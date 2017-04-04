@@ -2,6 +2,7 @@ package com.dd.command_util.command;
 
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
+import com.dd.controller_util.controller.RunningGameController;
 
 public class HelpCommand extends CommandHandler {
     public HelpCommand() {}
@@ -14,33 +15,36 @@ public class HelpCommand extends CommandHandler {
 					+ "\" passed to help command.");
 		}
 
-		outputLog.printToLog("\t\tAVAILABLE COMMANDS\n"
+		outputLog.printToLog(RunningGameController.printLnTitle('~', "AVAILABLE COMMANDS", 80)
+				+ "\"attack <entity_name>\"\n"
+				+ "Initiate an attack against the entity with name entity_name.\n"
 				+ "\n"
-				+ "attack <entity_name>\n"
-				+ "\tInitiate an attack against the entity with name entity_name.\n"
+				+ "\"enter\"\n"
+				+ "Enter the dungeon, begin the game."
 				+ "\n"
-				+ "move <direction>\n"
-				+ "\tMove the player to the room in the specified direction of the room the player is\n" 
-				+ "\tcurrently in. If no room exists in the specified direction this will fail. The\n" 
-				+ "\tvalid directions are: north, south, east, and west.\n"
+				+ "\"move <direction>\"\n"
 				+ "\n"
-				+ "examine <entity_name> | <item_name> | room | monster(s) | items\n"
-				+ "\tGet a description of either an entity with name entity_name, and item with name\n"
-				+ "\titem_name, or the room the player is currently in, or a list of monsters or items.\n"
+				+ "Move the player to the room in the specified direction of the room the "
+				+ "player is currently in. If no room exists in the specified direction this "
+				+ "will fail. The valid directions are: north, south, east, and west.\n"
 				+ "\n"
-				+ "use <item_name>\n"
-				+ "\tUse an item with the name item_name to receive its effects. If the item specified\n" 
-				+ "\tis not a usable item this will fail.\n"
+				+ "\"examine room | monsters | items | <name>\"\n"
+				+ "Get a description of either an entity by name, and item by name, or the room "
+				+ "the player is currently in, or a list of monsters or items.\n"
 				+ "\n"
-				+ "pickup <item_name>\n"
-				+ "\tAdd the item with the name item_name to the player's inventory.\n"
+				+ "\"use <item name>\"\n"
+				+ "Use an item with the name item_name to receive its effects. If the item specified "
+				+ "is not a usable item this will fail.\n"
 				+ "\n"
-				+ "drop <item_name>\n"
-				+ "\tRemove an item with the name item_name from the players inventory. The item will\n" 
-				+ "\tbe placed in the room the player is currently in.\n"
+				+ "\"pickup <item name>\"\n"
+				+ "Add the item with the name to the player's inventory.\n"
 				+ "\n"
-				+ "equip <item_name> <body_location>\n"
-				+ "\tEquip an item with the name item_name to the player at the location body_location.\n" 
-				+ "\tIf the specified location is already occupied this will fail.\n");
+				+ "\"drop <item name>\"\n"
+				+ "Remove an item with the name item name from the players inventory. The item will "
+				+ "be placed in the room the player is currently in.\n"
+				+ "\n"
+				+ "\"equip <item name>\"\n"
+				+ "Equip an item with the name to the player at the If the location is already "
+				+ "occupied this will fail.\n");
 	}
 }

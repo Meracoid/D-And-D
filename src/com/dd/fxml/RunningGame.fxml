@@ -25,17 +25,17 @@
             <Insets />
          </GridPane.margin>
       </TextField>
-      <TextArea fx:id="output" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="454.0" text="&gt; Welcome to D&amp;D. Type help for a list of commands." wrapText="true" GridPane.rowSpan="2">
+      <TextArea fx:id="output" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="454.0" wrapText="true" GridPane.rowSpan="2">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
       </TextArea>
-      <TextArea fx:id="map" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" text="[Map goes here]" wrapText="true" GridPane.columnIndex="1">
+      <TextArea fx:id="map" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
       </TextArea>
-      <TextArea fx:id="stats" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" text="MERLIN&#10;Health&#9;10/10&#10;Attack&#9;2 (+0)&#10;Defense&#9;3 (+0)" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <TextArea fx:id="stats" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>

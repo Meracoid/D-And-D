@@ -9,6 +9,10 @@ import com.dd.command_util.CommandParser;
 import com.dd.command_util.command.*;
 import com.dd.controller_util.ControllerArgumentPackage;
 import com.dd.controller_util.GameSceneController;
+import com.dd.entities.Player;
+import com.dd.levels.DungeonMap;
+import com.dd.levels.MapPosition;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,21 +40,22 @@ public class RunningGameController extends GameSceneController{
 
 	private GameState gameState;
 	private CommandParser commandParser;
+	//private Console console;
 	
 	/**
 	 * Event handler for "Enter" key.
 	 */
 	@FXML
 	private void handleEnterPressed(KeyEvent event) {
-		
 		// if enter pressed and input is not empty
 		if (event.getCode() == KeyCode.ENTER && !input.getText().equals("")) {
 			// append to output and clear the textfield
 			String commandStr = input.getText();
-			output.appendText(input.getText() + "\n");
 			input.clear();
 			try{
 				commandParser.parse(commandStr);
+				updateMap();
+				updateStatboard();
 			}
 			catch(CommandParser.InvalidCommandException e){
 				output.appendText("The command string \""
@@ -82,11 +87,56 @@ public class RunningGameController extends GameSceneController{
 		DandD.setActiveGameScene("MainMenuScene", null);
 	}
 	
-	/**
-	 * Appends text to the TextArea output.
-	 */
-	public void appendText(String str) {
-		Platform.runLater(() -> output.appendText(str));
+	public void updateMap() {
+		map.setText(printMap());
+	}
+	
+	public void updateStatboard() {
+		stats.setText(printStatboard());
+	}
+	
+	public String printMap() {
+		Player player = gameState.getActivePlayer();
+		DungeonMap map = gameState.getMap();
+		StringBuilder output = new StringBuilder();
+		output.append(printLnTitle('~', "MAP", 40));
+		MapPosition playerPos = player.getPostion();
+		for(int y = 0; y < map.getMaxRow(); y++){
+			for(int x = 0; x < map.getMaxCol(); x++){
+				if(playerPos.getX() == x && playerPos.getY() == y)
+					output.append(" X ");
+				else if(map.isRoom(new MapPosition(x, y)))
+					output.append("[ ]");
+				else
+					output.append("   ");
+			}
+			output.append("\n");
+		}
+		return output.toString();
+	}
+	
+	public String printStatboard() {
+		Player player = gameState.getActivePlayer();
+		StringBuilder output = new StringBuilder();
+		output.append(printLnTitle('~', player.getName().toUpperCase() + "'S STATS BOARD", 40));
+		output.append(player.statboardToString());
+		return output.toString();
+	}
+	
+	public static String printLnTitle(char c, String str, int width) {
+    	StringBuilder output = new StringBuilder();
+		int strLength = str.length();
+		int startIndex = (width / 2) - (strLength / 2);
+		for(int i = 0; i <= width; i++){
+			if(i == startIndex){
+				output.append(str);
+				i += strLength;
+			}else{
+				output.append(c);
+			}
+		}
+		output.append("\n");
+		return output.toString();
 	}
 
 	public void setGameState(GameState gameState){
@@ -104,7 +154,18 @@ public class RunningGameController extends GameSceneController{
 	public void setup(ControllerArgumentPackage args){
 		GameState gameState = args.getArgument("GameState");
 		this.gameState = gameState;
-		commandParser = new CommandParser(new CommandOutputLog(output));
+		
+		map.setStyle("-fx-font-family: monospace");
+		stats.setStyle("-fx-font-family: monospace");
+		updateMap();
+		updateStatboard();
+		output.clear();
+		output.setStyle("-fx-font-family: monospace");
+		output.appendText(printLnTitle('~', " Welcome to Dungeons and D&D ", 80));
+		output.appendText("Type \"help\" for a list of commands\n");
+		
+		commandParser = new CommandParser(new CommandOutputLog(output), gameState.getActivePlayer().getName());
+		commandParser.registerCommand("enter", new EnterCommand(gameState));
 		commandParser.registerCommand("move", new MoveCommand(gameState));
 		commandParser.registerCommand("examine", new ExamineCommand(gameState));
 		commandParser.registerCommand("drop", new DropCommand(gameState));

@@ -4,10 +4,18 @@ public class MapPosition {
 	
 	private int x;
 	private int y;
+	private boolean isInDungeon;
 
 	public MapPosition() {
 		setX(0);
 		setY(0);
+	}
+	
+	public MapPosition(boolean isInDungeon) {
+		if(isInDungeon == false){
+			this.x = -1;
+			this.y = -1;
+		}
 	}
 	
 	public MapPosition(int xPos, int yPos) {

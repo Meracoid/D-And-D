@@ -1,38 +1,47 @@
 package com.dd.command_util;
 
-import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
-import com.dd.command_util.command.*;
+import com.dd.controller_util.controller.RunningGameController;
+import com.dd.entities.Player;
+
 import java.io.FileNotFoundException;
 import java.lang.IllegalArgumentException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandParser {
     private Map<String, CommandHandler> commandMap = new HashMap<String, CommandHandler>();
     private CommandOutputLog outputLog;
-    private String command = new String();
-	private String[] arguments = {null, null};
-	String log;
+    private String playerName;
 
     public CommandParser(){}
     
-    public CommandParser(CommandOutputLog outputLog) {
+    public CommandParser(CommandOutputLog outputLog, String playerName) {
         this.outputLog = outputLog;
+        this.playerName = playerName;
     }
     
     public void parse(String userInput) throws InvalidCommandException, FileNotFoundException{
     	if(userInput == null) {
             throw new IllegalArgumentException();
         }
+    	outputLog.printToLog(RunningGameController.printLnTitle('~', "", 80));
+    	outputLog.printToLog(playerName + ">> " + userInput + "\n");
+    	outputLog.printToLog(RunningGameController.printLnTitle('~', "Dungeon Master", 80));
     	String commandStr[] = userInput.split(" ");
     	String command = commandStr[0];
-    	String args[] = new String[commandStr.length - 1];
-    	for(int i = 1; i < commandStr.length; i++){
-    	    args[i - 1] = commandStr[i];
-        }
-
+    	ArrayList<String> arguments = new ArrayList<String>();
+    	if(commandStr.length > 1) {
+    		arguments.add(userInput.substring(command.length() + 1));
+    		for(int i = 0; i < commandStr.length - 1; i++) {
+    			arguments.add(commandStr[i + 1]);
+    		}
+    	}
+	    String[] args = new String[arguments.size()];
+	    for(int i=0; i < arguments.size(); i++) {
+	    	args[i] = arguments.get(i);
+	    }
     	CommandHandler handler = commandMap.get(command);
     	if(handler == null) {
             throw new InvalidCommandException("The command \""
@@ -64,10 +73,6 @@ public class CommandParser {
 
     public void setOutputLog(CommandOutputLog outputLog){
         this.outputLog = outputLog;
-    }
-
-    public String getLog(){
-    	return log;
     }
 
     public class InvalidCommandException extends Exception {

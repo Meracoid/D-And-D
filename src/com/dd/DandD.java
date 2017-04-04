@@ -28,6 +28,8 @@ public class DandD extends Application {
     public void start(Stage primaryStage) {
         try {
             stage = primaryStage;
+            stage.setWidth(1280);
+            stage.setHeight(720);
 
             //NEED TO MAKE FXML for these
             //addGameSceneControllerTuple("AddServerScene",

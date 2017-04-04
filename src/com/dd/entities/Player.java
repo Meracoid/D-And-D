@@ -16,13 +16,14 @@ public class Player extends Entity {
 	}
 
 	private MapPosition mapPosition;
+	private boolean isinDungeon = false;
 	private Item suit;
 	private Item leftHand;
 	private Item rightHand;
 
 	private Map<String, Item> inventory = new ConflictHandlingMap<Item>();
 	private int inventoryUsed = 0;
-	private int maxInventorySize;
+	private int maxInventorySize = 10;
 
 	public Player(String name, MapPosition pos, Stats stats) {
 		super(name, stats);
@@ -31,12 +32,12 @@ public class Player extends Entity {
 
 	public Player(String name) {
 		super(name);
-		setMapPosition(new MapPosition());
+		setMapPosition(new MapPosition(false));
 	}
 	
 	public Player() {
 		super();
-		setMapPosition(new MapPosition());
+		setMapPosition(new MapPosition(false));
 	}
 
 	public void usePotion(Item item) {
@@ -300,6 +301,15 @@ public class Player extends Entity {
 	public void discardAllEquipment() {
 		leftHand = rightHand = suit = null;
 	}
+	
+	public boolean isinDungeon() {
+		return isinDungeon;
+	}
+	
+	public void enterDungeon() {
+		isinDungeon = true;
+		setMapPosition(new MapPosition());
+	}
 
 	public MapPosition getPostion() {
 		return mapPosition;
@@ -307,27 +317,6 @@ public class Player extends Entity {
 
 	public void setMapPosition(MapPosition p) {
 		mapPosition = p;
-	}
-
-	public String equipToString() {
-		StringBuilder lh=new StringBuilder();
-		if(leftHand!=null)
-			lh.append(leftHand.getName() + " " + leftHand.examineToString());
-		else
-			lh.append("empty");
-		StringBuilder rh=new StringBuilder();
-		if(rightHand!=null)
-			rh.append(rightHand.getName() + " " + rightHand.examineToString());
-		else
-			rh.append("empty");
-		StringBuilder s=new StringBuilder();
-		if(suit!=null)
-			s.append(suit.getName() + " " + suit.examineToString());
-		else
-			s.append("empty");
-		return "\tLeft Hand:\t"+lh.toString()+
-				"\n\tRight Hand:\t"+rh.toString() +
-				"\n\tSuit:\t\t"+s.toString();
 	}
 
 	public String getName() {
@@ -361,21 +350,41 @@ public class Player extends Entity {
 	public void setRightHand(Item rightHand) {
 		this.rightHand = rightHand;
 	}
+	
+	public String equipToString() {
+		StringBuilder lh = new StringBuilder();
+		if(leftHand != null)
+			lh.append(leftHand.getName() + " " + leftHand.examineToString());
+		else
+			lh.append("empty");
+		StringBuilder rh = new StringBuilder();
+		if(rightHand!=null)
+			rh.append(rightHand.getName() + " " + rightHand.examineToString());
+		else
+			rh.append("empty");
+		StringBuilder s = new StringBuilder();
+		if(suit!=null)
+			s.append(suit.getName() + " " + suit.examineToString());
+		else
+			s.append("empty");
+		return "Left Hand:  " + lh.toString() + "\n"
+				+ "Right Hand: " + rh.toString() + "\n"
+				+ "Suit:       " + s.toString();
+	}
 
 	public String inventoryToString() {
-		StringBuilder sb = new StringBuilder("\tInventory:\n");
-		int i = 1;
-		for(String itemName:inventory.keySet()){
-			sb.append("\t\t\t" + ( i + 1 ) + ". " + itemName + "\n");
-			i++;
+		StringBuilder sb = new StringBuilder("Inventory:");
+		int i = 0;
+		for(String itemName : inventory.keySet()){
+			sb.append("  " + ++i + " " + itemName + "\n");
 		}	
 		return sb.toString();
 	}
 	
 	public String statboardToString() {
 		return	stats.toString()
-				+ "\n\n"+equipToString()
-				+ "\n"+inventoryToString();
+				+ "\n" + equipToString()
+				+ "\n" + inventoryToString();
 				
 	}
 	

@@ -21,32 +21,32 @@ public class EquipCommand extends CommandHandler {
 	}
 
     @Override
-    public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog){
-    	if(args.length != 1){
-			outputLog.printToLog("Invalid arguments \""
-					+ getArgsString(args)
-					+ "\" passed to equip command.");
+    public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) {
+		if(args[0] != null) {
+	    	Room room = dungeonMap.getRoom(player.getPostion());
+	    	Item item = room.getItem(args[0]);
+	    	if(item != null){
+	    		try{
+	    			player.equip(item);
+	    			room.removeItem(item.getName());
+	    			outputLog.printToLog(player.getName() + " has equipped " + item.getName() + "\n");
+	    		}
+	    		catch(EquipmentException ee) {
+	    			outputLog.printToLog(ee.toString() + "\n");
+	    		}
+	    		catch(InventoryException ie) {
+	    			outputLog.printToLog(ie.toString() + "\n");
+	    		} catch (UnknownItemException UIE) {
+					outputLog.printToLog(UIE.toString() + "\n");
+				}
+	    	}
+	    	else {
+	    		outputLog.printToLog("The item \"" + args[0] + "\" is not in this room.\n");
+	    	}
+	    	outputLog.printToLog(room.examineString());
 		}
-		Room room = dungeonMap.getRoom(player.getPostion());
-    	Item item = room.getItem(args[0]);
-    	if(item != null){
-    		try{
-    			player.equip(item);
-    			room.removeItem(item.getName());
-    			outputLog.printToLog(player.getName() + " has equipped " + item.getName() + "\n");
-    		}
-    		catch(EquipmentException ee) {
-    			outputLog.printToLog(ee.toString() + "\n");
-    		}
-    		catch(InventoryException ie) {
-    			outputLog.printToLog(ie.toString() + "\n");
-    		} catch (UnknownItemException UIE) {
-				outputLog.printToLog(UIE.toString() + "\n");
-			}
-    	}
-    	else {
-    		outputLog.printToLog("The item \"" + args[0] + "\" is not in this room.\n");
-    	}
-    	outputLog.printToLog(room.examineString());
+		else {
+			outputLog.printToLog("Type \"help\" for help using the equip command.\n");
+		}
     }
 }

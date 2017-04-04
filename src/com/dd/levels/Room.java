@@ -44,7 +44,7 @@ public class Room {
 		else {
 			examineStr.append("This room has no items");
 		}
-		return examineStr.toString();
+		return examineStr.toString() + "\n";
 	}
 
 	public boolean isEmpty() {
