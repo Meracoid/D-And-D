@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JoinMenu.java">
+   
+	<children>
+      
+		<Button fx:id="nextButtonJoin" layoutX="453.0" layoutY="329.0" mnemonicParsing="false" onAction="#nextButtonJoinAction" prefHeight="39.0" prefWidth="88.0" text="Next">
+         
+			<font>
+            
+				<Font size="18.0" />
+         
+			</font>
+      
+		</Button>
+      
+		<RadioButton fx:id="joinRadioButtion" layoutX="152.0" layoutY="27.0" mnemonicParsing="false" prefHeight="129.0" prefWidth="284.0" />
+      
+		<TextField fx:id="gameNameDisplay" editable="false" layoutX="216.0" layoutY="55.0" prefHeight="26.0" prefWidth="155.0" text="Game Name:" />
+      
+		<TextField fx:id="ipAdressDisplay" editable="false" layoutX="216.0" layoutY="91.0" prefHeight="26.0" prefWidth="155.0" text="IP address: " />
+      
+		<Button fx:id="addButton" layoutX="348.0" layoutY="329.0" mnemonicParsing="false" onAction="#addButtonAction" prefHeight="39.0" prefWidth="88.0" text="Add">
+			
+			<font>
+            
+				<Font size="18.0" />
+         
+    			</font>
+      
+		</Button>
+   
+	</children>
+</Pane>
