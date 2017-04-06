@@ -25,7 +25,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <RadioButton fx:id="joinRadioButton" contentDisplay="GRAPHIC_ONLY" layoutX="114.0" layoutY="59.0" mnemonicParsing="false" prefHeight="98.0" prefWidth="336.0" visible="false">
+      <RadioButton fx:id="joinRadioButton" layoutX="114.0" layoutY="59.0" mnemonicParsing="false" prefHeight="98.0" prefWidth="336.0" visible="false">
          <toggleGroup>
             <ToggleGroup fx:id="netGames" />
          </toggleGroup>
