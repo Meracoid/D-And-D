@@ -46,7 +46,12 @@ public class DandD extends Application {
                                         generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/NewGame.fxml")));
             addGameSceneControllerTuple("RunningGameScene",
                                         generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/RunningGame.fxml")));
-            
+            addGameSceneControllerTuple("JoinGameScene",
+                    generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/JoinMenu.fxml")));
+            addGameSceneControllerTuple("NextMenuScene",
+                    generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/CharacterCreation.fxml")));
+            addGameSceneControllerTuple("AddMenuScene",
+                    generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/AddScene.fxml")));
             primaryStage.setTitle("D&D");
             setActiveGameScene("MainMenuScene", null);
             primaryStage.show();
