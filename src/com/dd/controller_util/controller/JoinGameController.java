@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -22,22 +23,16 @@ public class JoinGameController extends GameSceneController{
 	@FXML
 	Button nextButtonJoin;
 	@FXML
-	RadioButton joinRadioButton;
-	@FXML
-	TextField gameNameDisplay;
-	@FXML
-	TextField ipAddressDisplay;
-	@FXML
 	Button addButton;
 	@FXML
 	Button backToMenu;
 	@FXML
-	ToggleGroup netGames;
+	ListView netGameList;
 	@FXML
 	Label errorLable;
 	@FXML
 	private void nextButtonJoinAction(ActionEvent event) throws IOException{
-		if(checkRadioButton()){
+		if(listItemIsClicked()){
 			DandD.setActiveGameScene("NextMenuScene", null);
 		}
 	}
@@ -49,18 +44,17 @@ public class JoinGameController extends GameSceneController{
 	private void backToMenuAction(ActionEvent event) throws IOException{
 		DandD.setActiveGameScene("MainMenuScene", null);
 	}
-	private boolean checkRadioButton(){
-		if(netGames.hasProperties()){
-			if(netGames.getSelectedToggle()==null){
-				errorLable.setText("Please Select a Game");
-				return false;
-			}
+	private boolean listItemIsClicked(){
+		if(netGameList.equals("")){
+			errorLable.setText("No net games at this point. Please try again later.");
 		}
-		else if(!netGames.hasProperties()){
-			errorLable.setText("No Games are available. Please try again later");
-			return false;
+		else if(!netGameList.isPressed()){
+			errorLable.setText("Please select a net game to join.");
 		}
 		return true;
+	}
+	public void addNetGames(){
+		
 	}
     @Override
     public void setup(ControllerArgumentPackage args){
