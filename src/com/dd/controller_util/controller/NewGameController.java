@@ -4,48 +4,50 @@ import com.dd.DandD;
 import com.dd.GameState;
 import com.dd.controller_util.ControllerArgumentPackage;
 import com.dd.controller_util.GameSceneController;
-import com.dd.entities.Player;
-import com.dd.entities.monsters.*;
-import com.dd.items.*;
+import com.dd.entities.Fighter;
+import com.dd.entities.Wizard;
 import com.dd.levels.*;
 
-import java.io.IOException;
+import java.util.Random;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.stage.Stage;
 
 public class NewGameController extends GameSceneController{
-	@FXML TextField saveName;
-	@FXML TextField seedNumber;
-	@FXML TextField characterName;
-	@FXML Button startButton;
-	@FXML Button backButton;
-	@FXML RadioButton fighterRadio;
-	@FXML RadioButton wizardRadio;
-	@FXML ToggleGroup characterClass;
-	@FXML Label errorLabel;
+	@FXML private TextField saveName;
+	@FXML private TextField seedNumber;
+	@FXML private TextField characterName;
+	@FXML private Button startButton;
+	@FXML private Button backButton;
+	@FXML private RadioButton fighterRadio;
+	@FXML private RadioButton wizardRadio;
+	@FXML private ToggleGroup characterClass;
+	@FXML private Label errorLabel;
 
 	/**
 	 * Event handler for "Start Game" button.
 	 */
 	@FXML
-	private void handleStartButtonAction(ActionEvent event) throws IOException {
+	private void handleStartButtonAction(ActionEvent event) {
 		if (!checkFields()) {
 			return;
 		}
-
-		DungeonMap map = generateDungeonMap(5, 5);
-		GameState game = new GameState(saveName.getText(), new Player(characterName.getText()), map);
-
+		Integer seed = Integer.parseInt(seedNumber.getText());
+		DungeonMap map = new DungeonMap(seed);
+		GameState game = new GameState(saveName.getText(), map);
+		if(fighterRadio.isSelected()) {
+			Fighter fighter = new Fighter(characterName.getText(), map.getStartPosition());
+			game.setActivePlayer(fighter);
+		}
+		else if(wizardRadio.isSelected()) {
+			Wizard wizard = new Wizard(characterName.getText(), map.getStartPosition());
+			game.setActivePlayer(wizard);
+		}
 		ControllerArgumentPackage args = new ControllerArgumentPackage();
 		args.setArgument("GameState", game);
 
@@ -56,7 +58,7 @@ public class NewGameController extends GameSceneController{
 	 * Event handler for "Back" button.
 	 */
 	@FXML
-	private void handleBackButtonAction(ActionEvent event) throws IOException {
+	private void handleBackButtonAction(ActionEvent event) {
 		DandD.setActiveGameScene("MainMenuScene", null);
 	}
 	
@@ -106,44 +108,11 @@ public class NewGameController extends GameSceneController{
 		RadioButton rbutton = (RadioButton) characterClass.getSelectedToggle();
 		return rbutton.getText();
 	}
-
-	private DungeonMap generateDungeonMap(int width, int height) {
-		DungeonMap map = new DungeonMap(width, height);
-
-		OneHandedWeapon sword = new OneHandedWeapon("Sword of Mourning", 2);
-		Shield shield = new Shield("Wooden Shield", 4);
-		Artifact ring = new Artifact("Jade Ring", 0, 5, 1, 1);
-		Potion potion = new Potion("Health Elixer", 10);
-		Suit breastPlate = new Suit("Brass Breast Plate", 2);
-
-		Dragon dragon = new Dragon("Dragon", 10, 5, 5);
-
-		MapPosition buildPos = new MapPosition();
-		map.addRoom(new Room(), buildPos);
-		map.getRoom(buildPos).addItem(sword);
-		map.getRoom(buildPos).addItem(shield);
-		buildPos.moveEast();
-		map.addRoom(new Room(), buildPos);
-		map.getRoom(buildPos).addItem(breastPlate);
-		map.getRoom(buildPos).addItem(ring);
-		map.getRoom(buildPos).addItem(potion);
-		map.getRoom(buildPos).addMonster(dragon);
-		buildPos.moveEast();
-		map.addRoom(new Room(), buildPos);
-		buildPos.moveSouth();
-		map.addRoom(new Room(), buildPos);
-		buildPos.moveSouth();
-		map.addRoom(new Room(), buildPos);
-		buildPos.moveEast();
-		map.addRoom(new Room(), buildPos);
-		buildPos.moveSouth();
-		map.addRoom(new Room(), buildPos);
-		buildPos.moveSouth();
-		map.addRoom(new Room(), buildPos);
-		buildPos.moveEast();
-		map.addRoom(new Room(), buildPos);
-
-		return map;
+	
+	private void displaySeedNumber() {
+		Random rand = new Random();
+		String result = Integer.toString(rand.nextInt(Integer.MAX_VALUE));
+		seedNumber.setText(result);
 	}
 
 	/**
@@ -155,7 +124,13 @@ public class NewGameController extends GameSceneController{
 
 	@Override
 	public void setup(ControllerArgumentPackage args){
-
+		saveName.clear();
+		seedNumber.clear();
+		characterName.clear();
+		fighterRadio.setSelected(false);
+		wizardRadio.setSelected(false);
+		errorLabel.setText("");
+		displaySeedNumber();
 	}
 
 	@Override

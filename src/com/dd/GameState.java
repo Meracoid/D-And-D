@@ -1,6 +1,6 @@
 package com.dd;
 
-import com.dd.entities.Player;
+import com.dd.entities.*;
 import com.dd.levels.DungeonMap;
 import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
@@ -21,43 +21,58 @@ public class GameState {
         this.map = map;
 	}
 
-	public GameState(String name, Player activePlayer, DungeonMap map){
+	public GameState(String name, Player activePlayer, DungeonMap map) {
         this.name = name;
         this.activePlayer = activePlayer;
         this.maxNumPlayers = 1;
         allActivePlayers = new ArrayList<Player>();
         this.map = map;
     }
-
-    public Player getActivePlayer(){
-        return activePlayer;
-    }
-
-    public List<Player> getPlayerList(){
-        return allActivePlayers;
-    }
-
-    public DungeonMap getMap(){
-        return map;
-    }
-
-    public void setMap(DungeonMap map){
+	
+	public GameState(String name, DungeonMap map) {
+        this.name = name;
+        this.maxNumPlayers = 1;
+        allActivePlayers = new ArrayList<Player>();
         this.map = map;
     }
 
-    public String getName(){
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+    
+    public void setActivePlayer(Fighter fighter) {
+    	activePlayer = fighter;
+    }
+    
+    public void setActivePlayer(Wizard wizard) {
+    	activePlayer = wizard;
+    }
+
+    public List<Player> getPlayerList() {
+        return allActivePlayers;
+    }
+
+    public DungeonMap getMap() {
+        return map;
+    }
+
+    public void setMap(DungeonMap map) {
+        this.map = map;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public int getMaxNumPlayers(){
+    public int getMaxNumPlayers() {
         return maxNumPlayers;
     }
 
-    public void setMaxNumPlayers(int maxNumPlayers){
+    public void setMaxNumPlayers(int maxNumPlayers) {
         this.maxNumPlayers = maxNumPlayers;
     }
 

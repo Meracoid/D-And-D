@@ -2,12 +2,8 @@ package com.dd;
 
 import com.dd.SceneControllerTuple;
 import com.dd.controller_util.ControllerArgumentPackage;
-import com.dd.controller_util.GameSceneController;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.IllegalArgumentException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +16,7 @@ public class DandD extends Application {
     private static Stage stage;
     private static Map<String, SceneControllerTuple> gameSceneControllerMap = new HashMap<String, SceneControllerTuple>();
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
     	launch(args);
     }
 
@@ -31,13 +27,12 @@ public class DandD extends Application {
             stage.setWidth(1280);
             stage.setHeight(720);
 
-            //NEED TO MAKE FXML for these
-            //addGameSceneControllerTuple("AddServerScene",
-            //                            generateSceneControllerTuple(new URL("/com/dd/fxml/AddServer.fxml")));
-            //addGameSceneControllerTuple("CharacterCreationScene",
-            //                            generateSceneControllerTuple(new URL("/com/dd/fxml/CharacterCreation.fxml")));
-            //addGameSceneControllerTuple("JoinGameScene",
-            //                            generateSceneControllerTuple(new URL("/com/dd/fxml/JoinGame.fxml")));
+            addGameSceneControllerTuple("AddServerScene",
+                                       generateSceneControllerTuple(new URL("/com/dd/fxml/AddScene.fxml")));
+            addGameSceneControllerTuple("CharacterCreationScene",
+                                        generateSceneControllerTuple(new URL("/com/dd/fxml/CharacterCreation.fxml")));
+            addGameSceneControllerTuple("JoinGameScene",
+                                        generateSceneControllerTuple(new URL("/com/dd/fxml/JoinMenu.fxml")));
             addGameSceneControllerTuple("LoadGameScene",
                                         generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/LoadGame.fxml")));
             addGameSceneControllerTuple("MainMenuScene",
@@ -46,12 +41,7 @@ public class DandD extends Application {
                                         generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/NewGame.fxml")));
             addGameSceneControllerTuple("RunningGameScene",
                                         generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/RunningGame.fxml")));
-            addGameSceneControllerTuple("JoinGameScene",
-                    generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/JoinMenu.fxml")));
-            addGameSceneControllerTuple("NextMenuScene",
-                    generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/CharacterCreation.fxml")));
-            addGameSceneControllerTuple("AddMenuScene",
-                    generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/AddScene.fxml")));
+            
             primaryStage.setTitle("D&D");
             setActiveGameScene("MainMenuScene", null);
             primaryStage.show();

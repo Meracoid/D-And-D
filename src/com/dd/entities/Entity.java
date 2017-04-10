@@ -62,6 +62,14 @@ public abstract class Entity {
 			System.out.println("You just killed a " + name + "!");
 		}
 	}
+	
+	public String typeToString() {
+		return getClass().toString().substring(22);
+	}
+	
+	public String titleToString() {
+		return typeToString() + " " + getName();
+	}
 
 	public String getName() {
 		return name;

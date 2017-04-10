@@ -1,17 +1,11 @@
 package com.dd.controller_util.controller;
 
-import java.io.IOException;
-
 import com.dd.DandD;
 import com.dd.controller_util.ControllerArgumentPackage;
 import com.dd.controller_util.GameSceneController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
 public class MainMenuController extends GameSceneController{
 	@FXML private Button newGame;
@@ -22,7 +16,7 @@ public class MainMenuController extends GameSceneController{
 	 * Event handler for "New Game" button.
 	 */
 	@FXML
-	private void handleNewGameAction(ActionEvent event) throws IOException {
+	private void handleNewGameAction(ActionEvent event) {
 		DandD.setActiveGameScene("NewGameScene", null);
 	}
 	
@@ -31,14 +25,14 @@ public class MainMenuController extends GameSceneController{
 	 */
 	@FXML
 	private void handleJoinGameAction(ActionEvent event) {
-		DandD.setActiveGameScene("JoinGameScene", null);
+		//DandD.setActiveGameScene("JoinGameScene", null);
 	}
 	
 	/**
 	 * Event handler for "Load Game" button.
 	 */
 	@FXML
-	private void handleLoadGameAction(ActionEvent event) throws IOException {
+	private void handleLoadGameAction(ActionEvent event) {
 		DandD.setActiveGameScene("LoadGameScene", null);
 	}
 	
