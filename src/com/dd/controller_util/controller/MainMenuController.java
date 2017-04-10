@@ -25,7 +25,7 @@ public class MainMenuController extends GameSceneController{
 	 */
 	@FXML
 	private void handleJoinGameAction(ActionEvent event) {
-		//DandD.setActiveGameScene("JoinGameScene", null);
+		DandD.setActiveGameScene("JoinGameScene", null);
 	}
 	
 	/**

@@ -33,12 +33,12 @@ public class JoinGameController extends GameSceneController{
 	@FXML
 	private void nextButtonJoinAction(ActionEvent event) throws IOException{
 		if(listItemIsClicked()){
-			DandD.setActiveGameScene("NextMenuScene", null);
+			//Implement joining game
 		}
 	}
 	@FXML
 	private void addButtonAction(ActionEvent event) throws IOException{
-		DandD.setActiveGameScene("AddMenuScene", null);
+		DandD.setActiveGameScene("AddServerScene", null);
 	}
 	@FXML
 	private void backToMenuAction(ActionEvent event) throws IOException{

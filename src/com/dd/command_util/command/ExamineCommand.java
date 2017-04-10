@@ -20,6 +20,7 @@ public class ExamineCommand extends CommandHandler {
 
     @Override
     public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog){
+    	/*
     	Room room = map.getRoom(player.getPostion());
     	switch(args[0]) {
     	case "room":
@@ -77,5 +78,6 @@ public class ExamineCommand extends CommandHandler {
 			}
 			break;
     	}
+    	*/
 	}
 }
