@@ -14,6 +14,7 @@ import com.dd.levels.Room;
 public class DropCommand extends CommandHandler {
 	private Player player;
 	private DungeonMap map;
+	private Item item;
 
     public DropCommand(GameState gameState) {
     	player = gameState.getActivePlayer();
@@ -27,7 +28,8 @@ public class DropCommand extends CommandHandler {
 		case "left hand":
 		case "lefthand":
 			try {
-				room.addItem(player.getLeftHand());
+				item = player.getLeftHand();
+				room.addItem(item);
 				player.discardEquipment(Equip.LEFTHAND);
 				outputLog.printToLog(player.titleToString() + " has dropped their left hand. ");
 			} catch (EquipmentException ee) {
@@ -37,7 +39,8 @@ public class DropCommand extends CommandHandler {
 		case "right hand":
 		case "righthand":
 			try {
-				room.addItem(player.getRightHand());
+				item = player.getRightHand();
+				room.addItem(item);
 				player.discardEquipment(Equip.RIGHTHAND);
 				outputLog.printToLog(player.titleToString() + " has dropped their right hand. ");
 			} catch (EquipmentException ee) {
@@ -46,7 +49,8 @@ public class DropCommand extends CommandHandler {
 			break;
 		case "hands":
 			try {
-				room.addItem(player.getLeftHand());
+				item = player.getLeftHand();
+				room.addItem(item);
 				player.discardEquipment(Equip.HANDS);
 				outputLog.printToLog(player.getName() + " has dropped both hands. ");
 			} catch (EquipmentException ee) {
@@ -55,7 +59,8 @@ public class DropCommand extends CommandHandler {
 			break;
 		case "suit":
 			try {
-				room.addItem(player.getSuit());
+				item = player.getSuit();
+				room.addItem(item);
 				player.discardEquipment(Equip.SUIT);
 				outputLog.printToLog(player.getName() + " has dropped their suit. ");
 			} catch (EquipmentException ee) {
@@ -70,7 +75,8 @@ public class DropCommand extends CommandHandler {
 			for(String inventoryName : player.getInventory().keySet()) {
 				if(i == inventoryNum) {
 					try {
-						room.addItem(player.getInventory().get(inventoryName));
+						item = player.getInventory().get(inventoryName);
+						room.addItem(item);
 						player.discardfromInventory(inventoryName);
 					} catch (InventoryException ie) {
 						outputLog.printToLog(ie.getMessage());
@@ -83,6 +89,7 @@ public class DropCommand extends CommandHandler {
 			outputLog.printToLog("The body area \"" + args[0] + "\" is not a valid entry. "
 					+ "Type \"help\" for help using the examine command. ");
 		}
+		player.getStats().changeStat(item.getStatChange());
 		outputLog.printToLog("This room now contains the following items:\n" + room.examineItems());
 	}
 }

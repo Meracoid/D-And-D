@@ -96,11 +96,12 @@ public class Player extends Entity {
 	}
 	
 	public void discardfromInventory(Item item) throws InventoryException {
-		if(inventory.remove(item) == null) {
+		if(!inventory.containsValue(item)){
 			throw new InventoryException("Item is not in the inventory of "
-											+ titleToString()
-											+ ". Item not dropped. ");
+					+ titleToString()
+					+ ". Item not dropped. ");
 		}
+		inventory.remove(item);
 	}
 	
 	public void pickup(Item item) throws InventoryException, EquipmentException {
