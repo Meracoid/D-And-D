@@ -14,9 +14,20 @@ import java.util.Map;
 public class Player extends Entity {
 
 	private MapPosition mapPosition;
-	protected Item suit;
-	protected Item leftHand;
-	protected Item rightHand;
+
+	protected ItemType leftHandType;
+	protected Magical leftHandMagical;
+	protected OneHandedWeapon leftHandOneHandedWeapon;
+	protected Shield leftHandShield;
+	
+	protected ItemType rightHandType;
+	protected Magical rightHandMagical;
+	protected OneHandedWeapon rightHandOneHandedWeapon;
+	protected Shield rightHandShield;
+	
+	protected Suit suit;
+	protected ItemType suitType;
+	
 	protected boolean equipSuccess;
 
 	private Map<String, Item> inventory = new ConflictHandlingMap<Item>();
@@ -107,6 +118,117 @@ public class Player extends Entity {
 	public void pickup(Item item) throws InventoryException, EquipmentException {
 		stats.changeStat(item.getStatChange());
 	}
+	
+	public boolean isLeftHandEmpty() {
+		return leftHandOneHandedWeapon == null
+				&& leftHandShield == null
+				&& leftHandMagical == null;
+	}
+	
+	public void SetLeftHand(Item item) throws EquipmentException {
+		if(item instanceof OneHandedWeapon) {
+			leftHandOneHandedWeapon = (OneHandedWeapon) item;
+			leftHandType = ItemType.ONEHANDEDWEAPON;
+		}
+		else if(item instanceof Shield) {
+			leftHandShield = (Shield) item;
+			leftHandType = ItemType.SHIELD;
+		}
+		else if(item instanceof Magical) {
+			leftHandMagical = (Magical) item;
+			leftHandType = ItemType.MAGICAL;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to a hand. ");
+		}
+	}
+	
+	public Item getLeftHand() throws EquipmentException {
+		if(leftHandType == ItemType.ONEHANDEDWEAPON) {
+			return (OneHandedWeapon) leftHandOneHandedWeapon;
+		}
+		else if(leftHandType == ItemType.SHIELD) {
+			return (Shield) leftHandShield;
+		}
+		else if(leftHandType == ItemType.MAGICAL) {
+			return (Magical) leftHandMagical;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+	
+	public boolean isRightHandEmpty() {
+		return rightHandMagical == null
+				&& rightHandOneHandedWeapon == null
+				&& rightHandShield == null;
+	}
+	
+	public void SetRightHand(Item item) throws EquipmentException {
+		if(item instanceof OneHandedWeapon) {
+			rightHandOneHandedWeapon = (OneHandedWeapon) item;
+			rightHandType = ItemType.ONEHANDEDWEAPON;
+		}
+		else if(item instanceof Shield) {
+			rightHandShield = (Shield) item;
+			rightHandType = ItemType.SHIELD;
+		}
+		else if(item instanceof Magical) {
+			rightHandMagical = (Magical) item;
+			rightHandType = ItemType.MAGICAL;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to a hand. ");
+		}
+	}
+	
+	public Item getRightHand() throws EquipmentException {
+		if(rightHandType == ItemType.ONEHANDEDWEAPON) {
+			return (OneHandedWeapon) rightHandOneHandedWeapon;
+		}
+		else if(rightHandType == ItemType.SHIELD) {
+			return (Shield) rightHandShield;
+		}
+		else if(rightHandType == ItemType.MAGICAL) {
+			return (Magical) rightHandMagical;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+	
+	public boolean isHandsEmpty() {
+		return leftHandMagical == null
+				&& leftHandOneHandedWeapon == null
+				&& leftHandShield == null
+				&& rightHandMagical == null
+				&& rightHandOneHandedWeapon == null
+				&& rightHandShield == null;
+	}
+	
+	public boolean isSuitEmpty() {
+		return suit == null;
+	}
+	
+	public void setSuit(Item item) throws EquipmentException {
+		if(item instanceof Suit) {
+			suit = (Suit) item;
+			suitType = ItemType.SUIT;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to a Suit. ");
+		}
+	}
+	
+	public Item getSuit() throws EquipmentException {
+		if(suitType == ItemType.SUIT) {
+			return (Suit) suit;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+
 
 	public Item removeEquipment(Equip bodyArea) throws EquipmentException {
 		Item retItem = null;
@@ -115,7 +237,7 @@ public class Player extends Entity {
 
 		switch(bodyArea){
 			case LEFTHAND:
-				if(leftHand == null){
+				if(isLeftHandEmpty()){
 					hadError = true;
 					errorTrailer = "the left hand is empty. ";
 				}
@@ -260,30 +382,6 @@ public class Player extends Entity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public Item getSuit() {
-		return suit;
-	}
-
-	public void setSuit(Item suit) {
-		this.suit = suit;
-	}
-
-	public Item getLeftHand() {
-		return leftHand;
-	}
-
-	public void setLeftHand(Item leftHand) {
-		this.leftHand = leftHand;
-	}
-
-	public Item getRightHand() {
-		return rightHand;
-	}
-
-	public void setRightHand(Item rightHand) {
-		this.rightHand = rightHand;
 	}
 	
 	public Map<String, Item> getInventory() {
