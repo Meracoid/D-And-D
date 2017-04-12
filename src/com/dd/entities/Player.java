@@ -103,58 +103,8 @@ public class Player extends Entity {
 		}
 	}
 	
-	public void basicEquip(Item item) throws EquipmentException {
-		if(item instanceof Artifact) {
-			try {
-				addtoInventory((Artifact) item);
-				equipSuccess = true;
-			} catch (InventoryException e) {
-				throw new EquipmentException(item.titleToString() 
-						+ " could not be picked up because " + titleToString() + "'s "
-						+ "inventory is full");
-			}
-		}
-		else if(item instanceof Shield){
-			if(leftHand == null) {
-				leftHand = (Shield)item;
-				equipSuccess = true;
-			}
-			else if(rightHand == null) {
-				rightHand = (Shield)item;
-				equipSuccess = true;
-			}
-			else {
-				throw new EquipmentException(item.titleToString() 
-						+ " could not be picked up because both of " 
-						+ titleToString() + "'s hands are full. ");
-			}
-		}
-		else if(item instanceof Suit) {
-			if(suit == null) {
-				suit = (Suit)item;
-				equipSuccess = true;
-			}
-			else {
-				throw new EquipmentException(item.titleToString() 
-						+ " could not be equipped because " 
-						+ titleToString() + " is already wearing a suit. ");
-			}
-		}
-		else if(item instanceof Potion) {
-			try {
-				addtoInventory((Potion) item);
-				equipSuccess = true;
-			} catch (InventoryException e) {
-				throw new EquipmentException(item.titleToString() 
-						+ " could not be picked up because " + titleToString() + "'s "
-						+ "inventory is full");
-			}
-			equipSuccess = true;
-		}
-	}
-	
-	public void equip(Item item) throws InventoryException, EquipmentException {
-		basicEquip(item);
+	public void pickup(Item item) throws InventoryException, EquipmentException {
+		stats.changeStat(item.getStatChange());
 	}
 
 	public Item removeEquipment(Equip bodyArea) throws EquipmentException {

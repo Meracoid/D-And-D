@@ -23,7 +23,7 @@ public class Fighter extends Player {
 	}
 
 	@Override
-	public void equip(Item item) throws InventoryException, EquipmentException {
+	public void pickup(Item item) throws InventoryException, EquipmentException {
 		if(item instanceof Artifact) {
 			try {
 				addtoInventory((Artifact) item);

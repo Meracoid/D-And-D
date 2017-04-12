@@ -48,31 +48,31 @@ public class PickupCommand extends CommandHandler {
 	    		try {
 	    			if(item instanceof Artifact) {
 						item = (Artifact) item;
-						player.equip((Artifact) item);
+						player.pickup((Artifact) item);
 					}
 					else if(item instanceof Magical) {
 						item = (Magical) item;
-						player.equip((Magical) item);
+						player.pickup((Magical) item);
 					}
 					else if(item instanceof OneHandedWeapon) {
 						item = (OneHandedWeapon) item;
-						player.equip((OneHandedWeapon) item);
+						player.pickup((OneHandedWeapon) item);
 					}
 					else if(item instanceof Potion) {
 						item = (Potion) item;
-						player.equip((Potion) item);
+						player.pickup((Potion) item);
 					}
 					else if(item instanceof Shield) {
 						item = (Shield) item;
-						player.equip((Shield) item);
+						player.pickup((Shield) item);
 					}
 					else if(item instanceof Suit) {
 						item = (Suit) item;
-						player.equip((Suit) item);
+						player.pickup((Suit) item);
 					}
 					else if(item instanceof TwoHandedWeapon) {
 						item = (TwoHandedWeapon) item;
-						player.equip((TwoHandedWeapon) item);
+						player.pickup((TwoHandedWeapon) item);
 					}
 					else {
 						outputLog.printToLog(item.getName() + " could not be equipped "
@@ -111,31 +111,31 @@ public class PickupCommand extends CommandHandler {
 			try {
 				if(item instanceof Artifact) {
 					item = (Artifact) item;
-					player.equip((Artifact) item);
+					player.pickup((Artifact) item);
 				}
 				else if(item instanceof Magical) {
 					item = (Magical) item;
-					player.equip((Magical) item);
+					player.pickup((Magical) item);
 				}
 				else if(item instanceof OneHandedWeapon) {
 					item = (OneHandedWeapon) item;
-					player.equip((OneHandedWeapon) item);
+					player.pickup((OneHandedWeapon) item);
 				}
 				else if(item instanceof Potion) {
 					item = (Potion) item;
-					player.equip((Potion) item);
+					player.pickup((Potion) item);
 				}
 				else if(item instanceof Shield) {
 					item = (Shield) item;
-					player.equip((Shield) item);
+					player.pickup((Shield) item);
 				}
 				else if(item instanceof Suit) {
 					item = (Suit) item;
-					player.equip((Suit) item);
+					player.pickup((Suit) item);
 				}
 				else if(item instanceof TwoHandedWeapon) {
 					item = (TwoHandedWeapon) item;
-					player.equip((TwoHandedWeapon) item);
+					player.pickup((TwoHandedWeapon) item);
 				}
 				else {
 					outputLog.printToLog(item.getName() + " could not be equipped "
