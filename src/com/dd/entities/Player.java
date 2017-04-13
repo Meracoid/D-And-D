@@ -54,7 +54,7 @@ public class Player extends Entity {
 		stats.changeStat(item.getStatChange());
 	}
 	
-	public void Drop(Equip bodyArea) throws EquipmentException {
+	public void drop(Equip bodyArea) throws EquipmentException {
 		Item dropItem = null;
 		String errorTrailer = "";
 		boolean hadError = false;

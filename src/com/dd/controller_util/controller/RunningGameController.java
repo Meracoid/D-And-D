@@ -3,13 +3,13 @@ package com.dd.controller_util.controller;
 import com.google.gson.Gson;
 import com.dd.DandD;
 import com.dd.GameState;
-import com.dd.GameType;
 import com.dd.command_util.CommandOutputLog;
 import com.dd.command_util.CommandParser;
 import com.dd.command_util.command.*;
 import com.dd.controller_util.ControllerArgumentPackage;
 import com.dd.controller_util.GameSceneController;
 import com.dd.entities.Player;
+import com.dd.entities.Player.EquipmentException;
 import com.dd.levels.DungeonMap;
 import com.dd.levels.MapPosition;
 import com.dd.levels.Room;
@@ -130,7 +130,11 @@ public class RunningGameController extends GameSceneController{
 		Player player = gameState.getActivePlayer();
 		StringBuilder output = new StringBuilder();
 		output.append(printLnTitle('~', player.getName().toUpperCase() + "'S STATS BOARD", 40));
-		output.append(player.statboardToString());
+		try {
+			output.append(player.statboardToString());
+		} catch (EquipmentException EE) {
+			output.append(EE.getMessage());
+		}
 		return output.toString();
 	}
 	
