@@ -13,6 +13,7 @@ import com.dd.levels.Room.UnknownItemException;
 public class ExamineCommand extends CommandHandler {
 	private Player player;
 	private DungeonMap map;
+	private Room room;
 
     public ExamineCommand(GameState gameState) {
     	player = gameState.getActivePlayer();
@@ -29,7 +30,7 @@ public class ExamineCommand extends CommandHandler {
 //    	if(args.length > 2) {
 //    		throw new InvalidArgumentException("Type \"help\" for help using the " + commandName +" command. ");
 //    	}
-    	Room room = map.getRoom(player.getPostion());
+    	room = map.getRoom(player.getPostion());
     	switch(args[0].toLowerCase()) {
     	case "room":
 			outputLog.printToLog(room.enterRoomText());
