@@ -8,37 +8,37 @@ import java.util.List;
 
 public class GameState {
     protected String name;
-	protected Player activePlayer;
+	protected Fighter activeFighter;
+	protected Wizard activeWizard;
+	protected PlayerType playerType;
 	protected int maxNumPlayers;
     protected List<Player> allActivePlayers = new ArrayList<Player>();
 	protected DungeonMap map;
 	
-	public GameState(String name, Player activePlayer, DungeonMap map, int maxNumPlayers) {
+	public GameState(String name, Player newPlayer, DungeonMap map, int maxNumPlayers) {
 	    this.name = name;
-	    if(activePlayer instanceof Fighter) {
-	    	this.activePlayer = (Fighter) activePlayer;
+	    if(newPlayer instanceof Fighter) {
+	    	this.activeFighter = (Fighter) newPlayer;
+	    	this.playerType = PlayerType.FIGHTER;
 	    }
-	    else if(activePlayer instanceof Wizard) {
-	    	this.activePlayer = (Wizard) activePlayer;
-	    }
-	    else {
-	    	this.activePlayer = activePlayer;
+	    else if(newPlayer instanceof Wizard) {
+	    	this.activeWizard = (Wizard) newPlayer;
+	    	this.playerType = PlayerType.WIZARD;
 	    }
         this.maxNumPlayers = maxNumPlayers;
         allActivePlayers = new ArrayList<Player>();
         this.map = map;
 	}
 
-	public GameState(String name, Player activePlayer, DungeonMap map) {
+	public GameState(String name, Player newPlayer, DungeonMap map) {
         this.name = name;
-        if(activePlayer instanceof Fighter) {
-	    	this.activePlayer = (Fighter) activePlayer;
+        if(newPlayer instanceof Fighter) {
+	    	this.activeFighter = (Fighter) newPlayer;
+	    	this.playerType = PlayerType.FIGHTER;
 	    }
-	    else if(activePlayer instanceof Wizard) {
-	    	this.activePlayer = (Wizard) activePlayer;
-	    }
-	    else {
-	    	this.activePlayer = activePlayer;
+	    else if(newPlayer instanceof Wizard) {
+	    	this.activeWizard = (Wizard) newPlayer;
+	    	this.playerType = PlayerType.WIZARD;
 	    }
         this.maxNumPlayers = 1;
         allActivePlayers = new ArrayList<Player>();
@@ -53,21 +53,23 @@ public class GameState {
     }
 
     public Player getActivePlayer() {
-    	if(activePlayer instanceof Fighter) {
-    		return (Fighter) activePlayer;
+    	if(playerType == PlayerType.FIGHTER) {
+    		return (Fighter) activeFighter;
     	}
-    	else if(activePlayer instanceof Wizard) {
-    		return (Wizard) activePlayer;
+    	else if(playerType == PlayerType.WIZARD) {
+    		return (Wizard) activeWizard;
     	}
-    	return activePlayer;
+    	else {
+    		return null;
+    	}
     }
     
     public void setActivePlayer(Fighter fighter) {
-    	activePlayer = fighter;
+    	activeFighter = fighter;
     }
     
     public void setActivePlayer(Wizard wizard) {
-    	activePlayer = wizard;
+    	activeWizard = wizard;
     }
 
     public List<Player> getPlayerList() {
