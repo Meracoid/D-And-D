@@ -60,7 +60,19 @@ public class GameState {
     		return (Wizard) activeWizard;
     	}
     	else {
-    		return null;
+    		return new Player(); //PROBLEM HAPPENED IF THIS RETURNS
+    	}
+    }
+    
+    public Player getActivePlayer(PlayerType Type) {
+    	if(Type == PlayerType.FIGHTER) {
+    		return (Fighter) activeFighter;
+    	}
+    	else if(Type == PlayerType.WIZARD) {
+    		return (Wizard) activeWizard;
+    	}
+    	else {
+       		return new Player(); //PROBLEM HAPPENED IF THIS RETURNS
     	}
     }
     
@@ -70,6 +82,10 @@ public class GameState {
     
     public void setActivePlayer(Wizard wizard) {
     	activeWizard = wizard;
+    }
+    
+    public PlayerType getPlayerType() {
+    	return playerType;
     }
 
     public List<Player> getPlayerList() {
