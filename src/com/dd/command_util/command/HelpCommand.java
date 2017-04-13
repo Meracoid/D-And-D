@@ -34,8 +34,9 @@ public class HelpCommand extends CommandHandler {
 				+ "pickup an item with the name and attempt to equip it to the player or add it to "
 				+ "their inventory. Use argument \"items\" to attempt to equip all the items in the room\n"
 				+ "\n"
-				+ "\"drop <body location> | <item name>\"\n"
-				+ "Remove an item from the given body location, or if the item specified is on your body, "
-				+ "or in your inventory, The item will be placed in the room the player is currently in.");
+				+ "\"drop <body location>\"\n"
+				+ "Remove an item from the given body location. For items in the inventory, please "
+				+ "provide an number to indicate which inventory item. The dropped item will be "
+				+ "placed in the room the player is currently in. ");
 	}
 }
