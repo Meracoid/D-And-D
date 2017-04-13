@@ -15,18 +15,18 @@ public class Player extends Entity {
 
 	private MapPosition mapPosition;
 
-	protected ItemType leftHandType;
+	protected ItemType leftHandType = ItemType.NONE;;
 	protected Magical leftHandMagical;
 	protected OneHandedWeapon leftHandOneHandedWeapon;
 	protected Shield leftHandShield;
 	
-	protected ItemType rightHandType;
+	protected ItemType rightHandType = ItemType.NONE;;
 	protected Magical rightHandMagical;
 	protected OneHandedWeapon rightHandOneHandedWeapon;
 	protected Shield rightHandShield;
 	
 	protected Suit suit;
-	protected ItemType suitType;
+	protected ItemType suitType = ItemType.NONE;;
 	
 	protected boolean equipSuccess;
 
@@ -48,7 +48,194 @@ public class Player extends Entity {
 		super();
 		setMapPosition(new MapPosition());
 	}
+	
+	public void pickup(Item item) throws InventoryException, EquipmentException {
+		stats.changeStat(item.getStatChange());
+	}
+	
+	public boolean isHandsEmpty() {
+		return leftHandMagical == null
+				&& leftHandOneHandedWeapon == null
+				&& leftHandShield == null
+				&& rightHandMagical == null
+				&& rightHandOneHandedWeapon == null
+				&& rightHandShield == null;
+	}
+	
+	public boolean isLeftHandEmpty() {
+		return leftHandOneHandedWeapon == null
+				&& leftHandShield == null
+				&& leftHandMagical == null;
+	}
+	
+	public void dropLeftHand() {
+		leftHandOneHandedWeapon = null;
+		leftHandShield = null;
+		leftHandShield = null;
+		leftHandType = ItemType.NONE;
+	}
+	
+	public void SetLeftHand(Item item) throws EquipmentException {
+		if(item instanceof OneHandedWeapon) {
+			leftHandOneHandedWeapon = (OneHandedWeapon) item;
+			leftHandType = ItemType.ONEHANDEDWEAPON;
+		}
+		else if(item instanceof Shield) {
+			leftHandShield = (Shield) item;
+			leftHandType = ItemType.SHIELD;
+		}
+		else if(item instanceof Magical) {
+			leftHandMagical = (Magical) item;
+			leftHandType = ItemType.MAGICAL;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to a hand. ");
+		}
+	}
+	
+	public Item getLeftHand() throws EquipmentException {
+		if(leftHandType == ItemType.ONEHANDEDWEAPON) {
+			return (OneHandedWeapon) leftHandOneHandedWeapon;
+		}
+		else if(leftHandType == ItemType.SHIELD) {
+			return (Shield) leftHandShield;
+		}
+		else if(leftHandType == ItemType.MAGICAL) {
+			return (Magical) leftHandMagical;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+	
+	public boolean isRightHandEmpty() {
+		return rightHandMagical == null
+				&& rightHandOneHandedWeapon == null
+				&& rightHandShield == null;
+	}
+	
+	public void dropRightHand() {
+		rightHandOneHandedWeapon = null;
+		rightHandShield = null;
+		rightHandShield = null;
+		rightHandType = ItemType.NONE;
+	}
+	
+	public void SetRightHand(Item item) throws EquipmentException {
+		if(item instanceof OneHandedWeapon) {
+			rightHandOneHandedWeapon = (OneHandedWeapon) item;
+			rightHandType = ItemType.ONEHANDEDWEAPON;
+		}
+		else if(item instanceof Shield) {
+			rightHandShield = (Shield) item;
+			rightHandType = ItemType.SHIELD;
+		}
+		else if(item instanceof Magical) {
+			rightHandMagical = (Magical) item;
+			rightHandType = ItemType.MAGICAL;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to a hand. ");
+		}
+	}
+	
+	public Item getRightHand() throws EquipmentException {
+		if(rightHandType == ItemType.ONEHANDEDWEAPON) {
+			return (OneHandedWeapon) rightHandOneHandedWeapon;
+		}
+		else if(rightHandType == ItemType.SHIELD) {
+			return (Shield) rightHandShield;
+		}
+		else if(rightHandType == ItemType.MAGICAL) {
+			return (Magical) rightHandMagical;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+	
+	public boolean isSuitEmpty() {
+		return suit == null;
+	}
+	
+	public void dropSuit() {
+		suit = null;
+		suitType = ItemType.NONE;
+	}
+	
+	public void setSuit(Item item) throws EquipmentException {
+		if(item instanceof Suit) {
+			suit = (Suit) item;
+			suitType = ItemType.SUIT;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to a Suit. ");
+		}
+	}
+	
+	public Item getSuit() throws EquipmentException {
+		if(suitType == ItemType.SUIT) {
+			return (Suit) suit;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+	
+	
 
+	public void Drop(Equip bodyArea) throws EquipmentException {
+		String errorTrailer = "";
+		boolean hadError = false;
+		switch(bodyArea) {
+			case LEFTHAND:
+				if(isLeftHandEmpty()) {
+					hadError = true;
+					errorTrailer = "the left hand is empty. ";
+				}
+				else {
+					leftHand = null;
+				}
+				break;
+			case RIGHTHAND:
+				if(isRightHandEmpty()) {
+					hadError = true;
+					errorTrailer = "the right hand is empty. ";
+				}
+				else {
+					rightHand = null;
+				}
+				break;
+			case HANDS:
+				if(isLeftHandEmpty()
+						|| isRightHandEmpty()
+						|| leftHand != rightHand) {
+					hadError = true;
+					errorTrailer = "both hands are not holding the same item. ";
+				}
+				else {
+					leftHand = rightHand = null;
+				}
+				break;
+			case SUIT:
+				if(suit == null) {
+					hadError = true;
+					errorTrailer = "no suit is being worn. ";
+				}
+				else {
+					suit = null;
+				}
+				break;
+			default:
+				hadError = true;
+				errorTrailer = "no body area was specified. ";
+		}
+		if(hadError) {
+			throw new EquipmentException("The item at the requested body area could not be removed becasue "
+											+ errorTrailer);
+		}
+	}
+	
 	public void usePotion(Item item) {
 		if(item instanceof Potion){
 			stats.changeStat(item.getStatChange());
@@ -113,233 +300,6 @@ public class Player extends Entity {
 					+ ". Item not dropped. ");
 		}
 		inventory.remove(item);
-	}
-	
-	public void pickup(Item item) throws InventoryException, EquipmentException {
-		stats.changeStat(item.getStatChange());
-	}
-	
-	public boolean isLeftHandEmpty() {
-		return leftHandOneHandedWeapon == null
-				&& leftHandShield == null
-				&& leftHandMagical == null;
-	}
-	
-	public void SetLeftHand(Item item) throws EquipmentException {
-		if(item instanceof OneHandedWeapon) {
-			leftHandOneHandedWeapon = (OneHandedWeapon) item;
-			leftHandType = ItemType.ONEHANDEDWEAPON;
-		}
-		else if(item instanceof Shield) {
-			leftHandShield = (Shield) item;
-			leftHandType = ItemType.SHIELD;
-		}
-		else if(item instanceof Magical) {
-			leftHandMagical = (Magical) item;
-			leftHandType = ItemType.MAGICAL;
-		}
-		else {
-			throw new EquipmentException(item.getName() + " cannot be set to a hand. ");
-		}
-	}
-	
-	public Item getLeftHand() throws EquipmentException {
-		if(leftHandType == ItemType.ONEHANDEDWEAPON) {
-			return (OneHandedWeapon) leftHandOneHandedWeapon;
-		}
-		else if(leftHandType == ItemType.SHIELD) {
-			return (Shield) leftHandShield;
-		}
-		else if(leftHandType == ItemType.MAGICAL) {
-			return (Magical) leftHandMagical;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-	
-	public boolean isRightHandEmpty() {
-		return rightHandMagical == null
-				&& rightHandOneHandedWeapon == null
-				&& rightHandShield == null;
-	}
-	
-	public void SetRightHand(Item item) throws EquipmentException {
-		if(item instanceof OneHandedWeapon) {
-			rightHandOneHandedWeapon = (OneHandedWeapon) item;
-			rightHandType = ItemType.ONEHANDEDWEAPON;
-		}
-		else if(item instanceof Shield) {
-			rightHandShield = (Shield) item;
-			rightHandType = ItemType.SHIELD;
-		}
-		else if(item instanceof Magical) {
-			rightHandMagical = (Magical) item;
-			rightHandType = ItemType.MAGICAL;
-		}
-		else {
-			throw new EquipmentException(item.getName() + " cannot be set to a hand. ");
-		}
-	}
-	
-	public Item getRightHand() throws EquipmentException {
-		if(rightHandType == ItemType.ONEHANDEDWEAPON) {
-			return (OneHandedWeapon) rightHandOneHandedWeapon;
-		}
-		else if(rightHandType == ItemType.SHIELD) {
-			return (Shield) rightHandShield;
-		}
-		else if(rightHandType == ItemType.MAGICAL) {
-			return (Magical) rightHandMagical;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-	
-	public boolean isHandsEmpty() {
-		return leftHandMagical == null
-				&& leftHandOneHandedWeapon == null
-				&& leftHandShield == null
-				&& rightHandMagical == null
-				&& rightHandOneHandedWeapon == null
-				&& rightHandShield == null;
-	}
-	
-	public boolean isSuitEmpty() {
-		return suit == null;
-	}
-	
-	public void setSuit(Item item) throws EquipmentException {
-		if(item instanceof Suit) {
-			suit = (Suit) item;
-			suitType = ItemType.SUIT;
-		}
-		else {
-			throw new EquipmentException(item.getName() + " cannot be set to a Suit. ");
-		}
-	}
-	
-	public Item getSuit() throws EquipmentException {
-		if(suitType == ItemType.SUIT) {
-			return (Suit) suit;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-
-
-	public Item removeEquipment(Equip bodyArea) throws EquipmentException {
-		Item retItem = null;
-		String errorTrailer = "";
-		boolean hadError = false;
-
-		switch(bodyArea){
-			case LEFTHAND:
-				if(isLeftHandEmpty()){
-					hadError = true;
-					errorTrailer = "the left hand is empty. ";
-				}
-				else {
-					retItem = leftHand;
-					leftHand = null;
-				}
-				break;
-			case RIGHTHAND:
-				if(rightHand == null){
-					hadError = true;
-					errorTrailer = "the right hand is empty. ";
-				}
-				else {
-					retItem = rightHand;
-					rightHand = null;
-				}
-				break;
-			case HANDS:
-				if(leftHand == null
-						|| rightHand == null
-						|| leftHand != rightHand){
-					hadError = true;
-					errorTrailer = "both hands are not holding the same item. ";
-				}
-				else {
-					retItem = leftHand;
-					leftHand = rightHand = null;
-				}
-				break;
-			case SUIT:
-				if(suit == null) {
-					hadError = true;
-					errorTrailer = "no armor is being worn. ";
-				}
-				else {
-					retItem = suit;
-					suit = null;
-				}
-				break;
-			default:
-				hadError = true;
-				errorTrailer = "no body area was specified. ";
-		}
-		if(hadError) {
-			throw new EquipmentException("The item at the requested body area could not be removed becasue "
-											+ errorTrailer);
-		}
-		return retItem;
-	}
-
-	public void discardEquipment(Equip bodyArea) throws EquipmentException {
-		String errorTrailer = "";
-		boolean hadError = false;
-
-		switch(bodyArea) {
-			case LEFTHAND:
-				if(leftHand == null) {
-					hadError = true;
-					errorTrailer = "the left hand is empty. ";
-				}
-				else {
-					leftHand = null;
-				}
-				break;
-			case RIGHTHAND:
-				if(rightHand == null) {
-					hadError = true;
-					errorTrailer = "the right hand is empty. ";
-				}
-				else {
-					rightHand = null;
-				}
-				break;
-			case HANDS:
-				if(leftHand == null
-						|| rightHand == null
-						|| leftHand != rightHand) {
-					hadError = true;
-					errorTrailer = "both hands are not holding the same item. ";
-				}
-				else {
-					leftHand = rightHand = null;
-				}
-				break;
-			case SUIT:
-				if(suit == null) {
-					hadError = true;
-					errorTrailer = "no suit is being worn. ";
-				}
-				else {
-					suit = null;
-				}
-				break;
-			default:
-				hadError = true;
-				errorTrailer = "no body area was specified. ";
-		}
-		if(hadError) {
-			throw new EquipmentException("The item at the requested body area could not be removed becasue "
-											+ errorTrailer);
-		}
 	}
 
 	public List<Item> removeAllEquipment() {
