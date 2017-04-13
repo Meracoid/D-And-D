@@ -6,7 +6,10 @@ import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
 import com.dd.command_util.CommandHandler.InvalidArgumentException;
+import com.dd.entities.Fighter;
 import com.dd.entities.Player;
+import com.dd.entities.PlayerType;
+import com.dd.entities.Wizard;
 import com.dd.entities.Player.EquipmentException;
 import com.dd.entities.Player.InventoryException;
 import com.dd.items.*;
@@ -16,13 +19,23 @@ import com.dd.levels.Room.UnknownItemException;
 
 public class PickupCommand extends CommandHandler {
 	private GameState gameState;
+	private Wizard wizard;
+    private Fighter fighter;
+    private PlayerType playerType = PlayerType.NONE;
 	private Player player;
 	private DungeonMap dungeonMap;
 	private Room room;
 
     public PickupCommand(GameState gameState) {
     	this.gameState = gameState;
-    	this.player = gameState.getActivePlayer();
+    	if(gameState.getActivePlayer() instanceof Fighter) {
+        	player = fighter = (Fighter) gameState.getActivePlayer();
+        	playerType = playerType.FIGHTER;
+        }
+        else if(gameState.getActivePlayer() instanceof Wizard) {
+        	player = wizard = (Wizard) gameState.getActivePlayer();
+        	playerType = PlayerType.WIZARD;
+        }
 		this.dungeonMap = gameState.getMap();
 		this.room = dungeonMap.getRoom(player.getPostion());
 	}

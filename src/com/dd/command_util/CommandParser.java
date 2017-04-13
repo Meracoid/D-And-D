@@ -15,17 +15,21 @@ public class CommandParser {
     private Map<String, CommandHandler> commandMap = new HashMap<String, CommandHandler>();
     private CommandOutputLog outputLog;
     private String input;
-    private Player player;
+    private Wizard wizard;
+    private Fighter fighter;
+    private PlayerType playerType = PlayerType.NONE; 
 
     public CommandParser(){}
     
     public CommandParser(CommandOutputLog outputLog, GameState game) {
         this.outputLog = outputLog;
         if(game.getActivePlayer() instanceof Fighter) {
-        	player = (Fighter) game.getActivePlayer();
+        	fighter = (Fighter) game.getActivePlayer();
+        	playerType = playerType.FIGHTER;
         }
         else if(game.getActivePlayer() instanceof Wizard) {
-        	player = (Wizard) game.getActivePlayer();
+        	wizard = (Wizard) game.getActivePlayer();
+        	playerType = PlayerType.WIZARD;
         }
     }
     
@@ -38,7 +42,12 @@ public class CommandParser {
     		throw new InvalidCommandException("You cannot start a command with a space. ");
     	}
     	outputLog.printToLog("\n" + RunningGameController.printLnTitle('~', "", 72));
-    	outputLog.printToLog(player.titleToString() + ">> " + input + "\n");
+    	if(playerType == PlayerType.FIGHTER) {
+    		outputLog.printToLog(fighter.titleToString() + ">> " + input + "\n");
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		outputLog.printToLog(wizard.titleToString() + ">> " + input + "\n");
+    	}
     	outputLog.printToLog(RunningGameController.printLnTitle('~', " Dungeon Master ", 72));
     	
     	String command = "";

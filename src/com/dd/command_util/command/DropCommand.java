@@ -3,9 +3,11 @@ package com.dd.command_util.command;
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
-import com.dd.command_util.CommandHandler.InvalidArgumentException;
 import com.dd.entities.Player;
+import com.dd.entities.PlayerType;
+import com.dd.entities.Wizard;
 import com.dd.entities.Equip;
+import com.dd.entities.Fighter;
 import com.dd.entities.ItemType;
 import com.dd.entities.Player.EquipmentException;
 import com.dd.entities.Player.InventoryException;
@@ -22,20 +24,37 @@ import com.dd.levels.Room;
 
 public class DropCommand extends CommandHandler {
 	private GameState gameState;
-	private Player player;
+	private Wizard wizard;
+    private Fighter fighter;
+    private Player player;
+    private PlayerType playerType = PlayerType.NONE;
 	private DungeonMap map;
 	private Room currRoom;
 	private Item dropItem;
 
     public DropCommand(GameState gameState) {
     	this.gameState = gameState;
-    	this.player = gameState.getActivePlayer();
+    	if(gameState.getActivePlayer() instanceof Fighter) {
+        	player = fighter = (Fighter) gameState.getActivePlayer();
+        	playerType = playerType.FIGHTER;
+        }
+        else if(gameState.getActivePlayer() instanceof Wizard) {
+        	player = wizard = (Wizard) gameState.getActivePlayer();
+        	playerType = PlayerType.WIZARD;
+        }
     	this.map = gameState.getMap();
 	}
 
 	@Override
 	public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException {
-		this.player = gameState.getActivePlayer();
+		if(gameState.getActivePlayer() instanceof Fighter) {
+        	player = fighter = (Fighter) gameState.getActivePlayer();
+        	playerType = playerType.FIGHTER;
+        }
+        else if(gameState.getActivePlayer() instanceof Wizard) {
+        	player = wizard = (Wizard) gameState.getActivePlayer();
+        	playerType = PlayerType.WIZARD;
+        }
 		this.currRoom = map.getRoom(player.getPostion());
 		player.resetDropSuccess();
 		if(args[0] == null) {
@@ -172,7 +191,6 @@ public class DropCommand extends CommandHandler {
 		}
 		if(player.isDropSuccess()) {
 			currRoom.addItem(dropItem);
-			player.changeStats(dropItem.getNegStatChange());
 		}
 		outputLog.printToLog("This room now contains the following items:\n" + this.currRoom.examineItems());
 	}
