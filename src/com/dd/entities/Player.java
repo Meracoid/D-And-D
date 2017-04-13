@@ -25,6 +25,9 @@ public class Player extends Entity {
 	protected OneHandedWeapon rightHandOneHandedWeapon;
 	protected Shield rightHandShield;
 	
+	protected ItemType handsType = ItemType.NONE;
+	protected TwoHandedWeapon hands;
+	
 	protected Suit suit;
 	protected ItemType suitType = ItemType.NONE;;
 	
@@ -53,13 +56,148 @@ public class Player extends Entity {
 		stats.changeStat(item.getStatChange());
 	}
 	
-	public boolean isHandsEmpty() {
-		return leftHandMagical == null
-				&& leftHandOneHandedWeapon == null
-				&& leftHandShield == null
-				&& rightHandMagical == null
-				&& rightHandOneHandedWeapon == null
-				&& rightHandShield == null;
+	public void Drop(Equip bodyArea) throws EquipmentException {
+		String errorTrailer = "";
+		boolean hadError = false;
+		switch(bodyArea) {
+			case LEFTHAND:
+				if(isLeftHandEmpty()) {
+					hadError = true;
+					errorTrailer = "the left hand is empty. ";
+				}
+				else {
+					dropLeftHand();
+				}
+				break;
+			case RIGHTHAND:
+				if(isRightHandEmpty()) {
+					hadError = true;
+					errorTrailer = "the right hand is empty. ";
+				}
+				else {
+					dropRightHand();
+				}
+				break;
+			case HANDS:
+				if(isHandsEmpty()) {
+					hadError = true;
+					errorTrailer = "both hands are not holding the same item. ";
+				}
+				else {
+					dropHands();
+				}
+				break;
+			case SUIT:
+				if(isSuitEmpty()) {
+					hadError = true;
+					errorTrailer = "no suit is being worn. ";
+				}
+				else {
+					dropSuit();
+				}
+				break;
+			default:
+				hadError = true;
+				errorTrailer = "no body area was specified. ";
+		}
+		if(hadError) {
+			throw new EquipmentException("The item at the requested body area could not be removed becasue "
+											+ errorTrailer);
+		}
+	}
+	
+	public void usePotion(Item item) {
+		if(item instanceof Potion){
+			stats.changeStat(item.getStatChange());
+		}
+		else{
+			System.out.println("ERROR item is not a potion. ");
+		}
+	}
+
+	public void usePotionFromInventory(String potionName) throws InventoryException {
+		Item potion = inventory.get(potionName);
+		if(potion == null){
+			throw new InventoryException("There are no potion of \""
+					+ potionName
+					+ "\" in the inventory of player \""
+					+ name
+					+ "\". Item removal failed. ");
+		}
+		if(!(potion instanceof Potion)) {
+			throw new InventoryException("The item \""
+											+ potionName
+											+ "\" in the inventory of player \""
+											+ "\" is not a potion. Item not used. ");
+		}
+		stats.changeStat(potion.getStatChange());
+		inventory.remove(potionName);
+	}
+
+	public void addtoInventory(Item item) throws InventoryException {
+		if(inventoryUsed == maxInventorySize){
+			throw new InventoryException("The inventory of " + titleToString()
+											+ " is already full. Item not added to inventory. ");
+		}
+		inventory.put(item.getName(), item);
+		++inventoryUsed;
+	}
+
+	public void removefromInventory(String itemName) throws InventoryException {
+		if(inventory.get(itemName) == null) {
+			throw new InventoryException("There are no items of \""
+											+ itemName
+											+ "\" in the inventory of player \""
+											+ name
+											+ "\". Item removal failed. ");
+		}
+		inventory.remove(itemName);
+	}
+
+	public void discardfromInventory(String itemName) throws InventoryException {
+		if(inventory.remove(itemName) == null) {
+			throw new InventoryException("\"" + itemName + "\" "
+					+ "is not in the inventory of "
+					+ titleToString()
+					+ ". Item not dropped. ");
+		}
+	}
+	
+	public void discardfromInventory(Item item) throws InventoryException {
+		if(!inventory.containsValue(item)){
+			throw new InventoryException("Item is not in the inventory of "
+					+ titleToString()
+					+ ". Item not dropped. ");
+		}
+		inventory.remove(item);
+	}
+
+	public List<Item> removeAllEquipment() throws EquipmentException {
+		List<Item> itemList = new ArrayList<Item>();
+		if(isLeftHandEmpty() || isRightHandEmpty()) {
+			if(getLeftHand().equals(getRightHand())) {
+				itemList.add(getLeftHand());
+			}
+			else {
+				if(isLeftHandEmpty()) {
+					itemList.add(getLeftHand());
+				}
+				if(isRightHandEmpty()) {
+					itemList.add(getRightHand());
+				}
+			}
+		}
+		if(isSuitEmpty()) {
+			itemList.add(getSuit());
+		}
+		dropHands();
+		dropSuit();
+		return itemList;
+	}
+
+	public void discardAllEquipment() {
+		dropHands();
+		dropSuit();
 	}
 	
 	public boolean isLeftHandEmpty() {
@@ -154,6 +292,34 @@ public class Player extends Entity {
 		}
 	}
 	
+	public boolean isHandsEmpty() {
+		return isLeftHandEmpty() && isRightHandEmpty();
+	}
+	
+	public void dropHands() {
+		dropLeftHand();
+		dropRightHand();
+	}
+	
+	public void setHands(Item item) throws EquipmentException {
+		if(item instanceof TwoHandedWeapon) {
+			hands = (TwoHandedWeapon) item;
+			handsType = ItemType.TWOHANDEDWEAPON;
+		}
+		else {
+			throw new EquipmentException(item.getName() + " cannot be set to both hands. ");
+		}
+	}
+	
+	public Item getHands() throws EquipmentException {
+		if(handsType == ItemType.TWOHANDEDWEAPON) {
+			return (TwoHandedWeapon) hands;
+		}
+		else {
+			throw new EquipmentException("item has incorrect type. ");
+		}
+	}
+	
 	public boolean isSuitEmpty() {
 		return suit == null;
 	}
@@ -180,152 +346,6 @@ public class Player extends Entity {
 		else {
 			throw new EquipmentException("item has incorrect type. ");
 		}
-	}
-	
-	
-
-	public void Drop(Equip bodyArea) throws EquipmentException {
-		String errorTrailer = "";
-		boolean hadError = false;
-		switch(bodyArea) {
-			case LEFTHAND:
-				if(isLeftHandEmpty()) {
-					hadError = true;
-					errorTrailer = "the left hand is empty. ";
-				}
-				else {
-					leftHand = null;
-				}
-				break;
-			case RIGHTHAND:
-				if(isRightHandEmpty()) {
-					hadError = true;
-					errorTrailer = "the right hand is empty. ";
-				}
-				else {
-					rightHand = null;
-				}
-				break;
-			case HANDS:
-				if(isLeftHandEmpty()
-						|| isRightHandEmpty()
-						|| leftHand != rightHand) {
-					hadError = true;
-					errorTrailer = "both hands are not holding the same item. ";
-				}
-				else {
-					leftHand = rightHand = null;
-				}
-				break;
-			case SUIT:
-				if(suit == null) {
-					hadError = true;
-					errorTrailer = "no suit is being worn. ";
-				}
-				else {
-					suit = null;
-				}
-				break;
-			default:
-				hadError = true;
-				errorTrailer = "no body area was specified. ";
-		}
-		if(hadError) {
-			throw new EquipmentException("The item at the requested body area could not be removed becasue "
-											+ errorTrailer);
-		}
-	}
-	
-	public void usePotion(Item item) {
-		if(item instanceof Potion){
-			stats.changeStat(item.getStatChange());
-		}
-		else{
-			System.out.println("ERROR item is not a potion. ");
-		}
-	}
-
-	public void usePotionFromInventory(String potionName) throws InventoryException {
-		Item potion = inventory.get(potionName);
-		if(potion == null){
-			throw new InventoryException("There are no potion of \""
-					+ potionName
-					+ "\" in the inventory of player \""
-					+ name
-					+ "\". Item removal failed. ");
-		}
-		if(!(potion instanceof Potion)) {
-			throw new InventoryException("The item \""
-											+ potionName
-											+ "\" in the inventory of player \""
-											+ "\" is not a potion. Item not used. ");
-		}
-		stats.changeStat(potion.getStatChange());
-		inventory.remove(potionName);
-	}
-
-	public void addtoInventory(Item item) throws InventoryException {
-		if(inventoryUsed == maxInventorySize){
-			throw new InventoryException("The inventory of " + titleToString()
-											+ " is already full. Item not added to inventory. ");
-		}
-		inventory.put(item.getName(), item);
-		++inventoryUsed;
-	}
-
-	public void removefromInventory(String itemName) throws InventoryException {
-		if(inventory.get(itemName) == null) {
-			throw new InventoryException("There are no items of \""
-											+ itemName
-											+ "\" in the inventory of player \""
-											+ name
-											+ "\". Item removal failed. ");
-		}
-		inventory.remove(itemName);
-	}
-
-	public void discardfromInventory(String itemName) throws InventoryException {
-		if(inventory.remove(itemName) == null) {
-			throw new InventoryException("\"" + itemName + "\" "
-					+ "is not in the inventory of "
-					+ titleToString()
-					+ ". Item not dropped. ");
-		}
-	}
-	
-	public void discardfromInventory(Item item) throws InventoryException {
-		if(!inventory.containsValue(item)){
-			throw new InventoryException("Item is not in the inventory of "
-					+ titleToString()
-					+ ". Item not dropped. ");
-		}
-		inventory.remove(item);
-	}
-
-	public List<Item> removeAllEquipment() {
-		List<Item> itemList = new ArrayList<Item>();
-		if(leftHand != null || rightHand != null) {
-			if(leftHand == rightHand) {
-				itemList.add(leftHand);
-			}
-			else {
-				if(leftHand != null) {
-					itemList.add(leftHand);
-				}
-				if(rightHand != null) {
-					itemList.add(rightHand);
-				}
-			}
-		}
-		if(suit != null) {
-			itemList.add(suit);
-		}
-		leftHand = rightHand = suit = null;
-		return itemList;
-	}
-
-	public void discardAllEquipment() {
-		leftHand = rightHand = suit = null;
 	}
 
 	public MapPosition getPostion() {
@@ -356,15 +376,15 @@ public class Player extends Entity {
 		equipSuccess = false;
 	}
 	
-	public String equipToString() {
+	public String equipToString() throws EquipmentException {
 		StringBuilder lh = new StringBuilder();
-		if(leftHand != null)
-			lh.append(leftHand.getName() + " " + leftHand.examineToString());
+		if(isLeftHandEmpty())
+			lh.append(getLeftHand().getName() + " " + getLeftHand().examineToString());
 		else
 			lh.append("empty");
 		StringBuilder rh = new StringBuilder();
-		if(rightHand!=null)
-			rh.append(rightHand.getName() + " " + rightHand.examineToString());
+		if(isRightHandEmpty())
+			rh.append(getRightHand().getName() + " " + getRightHand().examineToString());
 		else
 			rh.append("empty");
 		StringBuilder s = new StringBuilder();
@@ -386,7 +406,7 @@ public class Player extends Entity {
 		return sb.toString();
 	}
 	
-	public String statboardToString() {
+	public String statboardToString() throws EquipmentException {
 		return	stats.toString()
 				+ "\n" + equipToString()
 				+ "\n" + inventoryToString();
