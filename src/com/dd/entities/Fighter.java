@@ -1,8 +1,6 @@
 package com.dd.entities;
 
 import com.dd.Stats;
-import com.dd.entities.Player.EquipmentException;
-import com.dd.entities.Player.InventoryException;
 import com.dd.items.*;
 import com.dd.levels.MapPosition;
 

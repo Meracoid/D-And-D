@@ -2,10 +2,8 @@ package com.dd.entities;
 
 import com.dd.Stats;
 import com.dd.items.*;
-import com.dd.levels.DungeonMap;
 import com.dd.levels.MapPosition;
 import com.dd.dd_util.ConflictHandlingMap;
-import com.dd.entities.Player.EquipmentException;
 
 import java.util.ArrayList;
 import java.util.List;

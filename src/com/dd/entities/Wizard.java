@@ -1,8 +1,6 @@
 package com.dd.entities;
 
 import com.dd.Stats;
-import com.dd.entities.Player.EquipmentException;
-import com.dd.entities.Player.InventoryException;
 import com.dd.items.*;
 import com.dd.levels.MapPosition;
 
@@ -35,12 +33,12 @@ public class Wizard extends Player {
 			}
 		}
 		else if(item instanceof Shield){
-			if(leftHand == null) {
-				leftHand = (Shield)item;
+			if(isLeftHandEmpty()) {
+				setLeftHand((Shield) item);
 				equipSuccess = true;
 			}
-			else if(rightHand == null) {
-				rightHand = (Shield)item;
+			else if(isRightHandEmpty()) {
+				setRightHand((Shield) item);
 				equipSuccess = true;
 			}
 			else {
@@ -50,8 +48,8 @@ public class Wizard extends Player {
 			}
 		}
 		else if(item instanceof Suit) {
-			if(suit == null) {
-				suit = (Suit)item;
+			if(isSuitEmpty()) {
+				setSuit((Suit) item);
 				equipSuccess = true;
 			}
 			else {
@@ -76,12 +74,12 @@ public class Wizard extends Player {
 			case LEFTHAND:
 			case RIGHTHAND:
 			case HANDS:
-				if(leftHand == null) {
-					leftHand = (Magical)item;
+				if(isLeftHandEmpty()) {
+					setLeftHand((Magical) item);
 					equipSuccess = true;
 				}
-				else if(rightHand == null) {
-					rightHand = (Magical)item;
+				else if(isRightHandEmpty()) {
+					setRightHand((Magical) item);
 					equipSuccess = true;
 				}
 				else {
@@ -91,8 +89,8 @@ public class Wizard extends Player {
 				}
 				break;
 			case SUIT:
-				if(suit == null) {
-					suit = (Suit)item;
+				if(isSuitEmpty()) {
+					setSuit((Suit) item);
 					equipSuccess = true;
 				}
 				else {
@@ -119,13 +117,13 @@ public class Wizard extends Player {
 		}
 		else if(item instanceof OneHandedWeapon) {
 			((OneHandedWeapon) item).setStatForWizard();
-			if(leftHand == null) {
-				leftHand = (OneHandedWeapon)item;
+			if(isLeftHandEmpty()) {
+				setLeftHand((OneHandedWeapon) item);
 				equipSuccess = true;
 				
 			}
-			else if(rightHand == null) {
-				rightHand = (OneHandedWeapon)item;
+			else if(isRightHandEmpty()) {
+				setRightHand((OneHandedWeapon) item);
 				equipSuccess = true;
 			}
 			else {
