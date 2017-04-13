@@ -57,6 +57,7 @@ public class Player extends Entity {
 	}
 	
 	public void Drop(Equip bodyArea) throws EquipmentException {
+		Item dropItem = null;
 		String errorTrailer = "";
 		boolean hadError = false;
 		switch(bodyArea) {
@@ -66,6 +67,7 @@ public class Player extends Entity {
 					errorTrailer = "the left hand is empty. ";
 				}
 				else {
+					dropItem = getLeftHand();
 					dropLeftHand();
 				}
 				break;
@@ -75,6 +77,7 @@ public class Player extends Entity {
 					errorTrailer = "the right hand is empty. ";
 				}
 				else {
+					dropItem = getRightHand();
 					dropRightHand();
 				}
 				break;
@@ -84,6 +87,7 @@ public class Player extends Entity {
 					errorTrailer = "both hands are not holding the same item. ";
 				}
 				else {
+					dropItem = getHands();
 					dropHands();
 				}
 				break;
@@ -93,6 +97,7 @@ public class Player extends Entity {
 					errorTrailer = "no suit is being worn. ";
 				}
 				else {
+					dropItem = getSuit();
 					dropSuit();
 				}
 				break;
@@ -103,6 +108,9 @@ public class Player extends Entity {
 		if(hadError) {
 			throw new EquipmentException("The item at the requested body area could not be removed becasue "
 											+ errorTrailer);
+		}
+		else {
+			stats.changeStat(dropItem.getNegStatChange());
 		}
 	}
 	
