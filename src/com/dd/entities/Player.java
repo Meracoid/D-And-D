@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Player extends Entity {
+public abstract class Player extends Entity {
 
 	private MapPosition mapPosition;
 
@@ -143,6 +143,9 @@ public class Player extends Entity {
 		if(!isDropSuccess()) {
 			throw new EquipmentException("The item could not be dropped because "
 											+ errorTrailer);
+		}
+		else {
+			changeStats(dropItem.getNegStatChange());
 		}
 	}
 	
