@@ -9,15 +9,15 @@ public class Stats {
 	private int defense;
 	
 	public Stats(int health, int maxHealth, int attack, int defense) {
-		setHealth(health);
 		setMaxHealth(maxHealth);
+		setHealth(health);
 		setAttack(attack);
 		setDefense(defense);
 	}
 	
 	public void changeStat(Stats statChange){
-		addHealth(statChange.getHealth());
 		addMaxHealth(statChange.getMaxHealth());
+		addHealth(statChange.getHealth());
 		addAttack(statChange.getAttack());
 		addDefense(statChange.getDefense());
 	}
@@ -51,7 +51,7 @@ public class Stats {
 	}
 	
 	public void setHealth(int health) {
-		if(health > getMaxHealth()){
+		if(health > maxHealth){
 			this.health = getMaxHealth();
 		}
 		else{
