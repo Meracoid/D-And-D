@@ -25,7 +25,7 @@ public class Wizard extends Player {
 		if(item instanceof Artifact) {
 			try {
 				addtoInventory((Artifact) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 			} catch (InventoryException e) {
 				throw new EquipmentException(item.titleToString() 
 						+ " could not be picked up because " + titleToString() + "'s "
@@ -35,11 +35,11 @@ public class Wizard extends Player {
 		else if(item instanceof Shield){
 			if(isLeftHandEmpty()) {
 				setLeftHand((Shield) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 			}
 			else if(isRightHandEmpty()) {
 				setRightHand((Shield) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 			}
 			else {
 				throw new EquipmentException(item.titleToString() 
@@ -50,7 +50,7 @@ public class Wizard extends Player {
 		else if(item instanceof Suit) {
 			if(isSuitEmpty()) {
 				setSuit((Suit) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 			}
 			else {
 				throw new EquipmentException(item.titleToString() 
@@ -61,7 +61,7 @@ public class Wizard extends Player {
 		else if(item instanceof Potion) {
 			try {
 				addtoInventory((Potion) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 			} catch (InventoryException e) {
 				throw new EquipmentException(item.titleToString() 
 						+ " could not be picked up because " + titleToString() + "'s "
@@ -76,11 +76,11 @@ public class Wizard extends Player {
 			case HANDS:
 				if(isLeftHandEmpty()) {
 					setLeftHand((Magical) item);
-					equipSuccess = true;
+					pickupSuccess = true;
 				}
 				else if(isRightHandEmpty()) {
 					setRightHand((Magical) item);
-					equipSuccess = true;
+					pickupSuccess = true;
 				}
 				else {
 					throw new EquipmentException(item.getName() 
@@ -91,7 +91,7 @@ public class Wizard extends Player {
 			case SUIT:
 				if(isSuitEmpty()) {
 					setSuit((Suit) item);
-					equipSuccess = true;
+					pickupSuccess = true;
 				}
 				else {
 					throw new EquipmentException(item.getName() 
@@ -102,7 +102,7 @@ public class Wizard extends Player {
 			case NONE:
 				try {
 					addtoInventory((Magical) item);
-					equipSuccess = true;
+					pickupSuccess = true;
 				} catch (InventoryException e) {
 					throw new EquipmentException(item.titleToString() 
 							+ " could not be picked up because " + titleToString() + "'s "
@@ -119,12 +119,12 @@ public class Wizard extends Player {
 			((OneHandedWeapon) item).setStatForWizard();
 			if(isLeftHandEmpty()) {
 				setLeftHand((OneHandedWeapon) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 				
 			}
 			else if(isRightHandEmpty()) {
 				setRightHand((OneHandedWeapon) item);
-				equipSuccess = true;
+				pickupSuccess = true;
 			}
 			else {
 				throw new EquipmentException(item.getName() 
@@ -137,7 +137,7 @@ public class Wizard extends Player {
 					+ " could not be equipped because "
 					+ "wizards cannot use " + item.typeToString() + "s. ");
 		}
-		stats.changeStat(item.getStatChange());
+		changeStats(item.getStatChange());
 	}
 
 }

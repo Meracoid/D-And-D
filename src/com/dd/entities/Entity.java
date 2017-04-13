@@ -94,6 +94,10 @@ public abstract class Entity {
 		this.stats = stats;
 	}
 	
+	public void changeStats(Stats statModifier) {
+		this.stats.changeStat(statModifier);
+	}
+	
 	public String getText() {
 		return text;
 	}

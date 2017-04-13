@@ -15,11 +15,13 @@ import com.dd.levels.Room;
 import com.dd.levels.Room.UnknownItemException;
 
 public class PickupCommand extends CommandHandler {
+	private GameState gameState;
 	private Player player;
 	private DungeonMap dungeonMap;
 	private Room room;
 
     public PickupCommand(GameState gameState) {
+    	this.gameState = gameState;
     	this.player = gameState.getActivePlayer();
 		this.dungeonMap = gameState.getMap();
 		this.room = dungeonMap.getRoom(player.getPostion());
@@ -27,8 +29,9 @@ public class PickupCommand extends CommandHandler {
 
     @Override
     public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException {
-    	player.resetEquipSuccess();
+    	this.player = gameState.getActivePlayer();
     	this.room = dungeonMap.getRoom(player.getPostion());
+    	player.resetPickupSuccess();
     	if(args[0] == null) {
     		throw new InvalidArgumentException("Choose something to pickup. "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
@@ -38,7 +41,7 @@ public class PickupCommand extends CommandHandler {
 		case "items":
 			ArrayList<String> equippedItemNames = new ArrayList<String>();;
 			for(String itemName : room.getItemList().keySet()) {
-				player.resetEquipSuccess();
+				player.resetPickupSuccess();
 				try {
 					item = room.getItem(itemName);
 				}
@@ -78,7 +81,7 @@ public class PickupCommand extends CommandHandler {
 						outputLog.printToLog(item.getName() + " could not be equipped "
 								+ "because it has not item type. ");
 					}
-	    			if(player.isEquipSuccess()) {
+	    			if(player.isPickupSuccess()) {
 	    				equippedItemNames.add(itemName);
 	    			}
 	    		}
@@ -95,7 +98,7 @@ public class PickupCommand extends CommandHandler {
 				}
 			}
 	    	equippedItemNames.forEach((k) -> outputLog.printToLog(player.titleToString() + " has equipped " + k + ". "));
-	    	player.resetEquipSuccess();
+	    	player.resetPickupSuccess();
 			break;
 		default:
 			try {
@@ -147,7 +150,7 @@ public class PickupCommand extends CommandHandler {
     			return;
     		}
     		try {
-    			if(player.isEquipSuccess()) {
+    			if(player.isPickupSuccess()) {
     				room.removeItem(item.getName());
     				outputLog.printToLog(player.titleToString() + " has equipped " + item.titleToString() + ". ");
     			}
