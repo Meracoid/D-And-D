@@ -213,7 +213,7 @@ public class Player extends Entity {
 		leftHandType = ItemType.NONE;
 	}
 	
-	public void SetLeftHand(Item item) throws EquipmentException {
+	public void setLeftHand(Item item) throws EquipmentException {
 		if(item instanceof OneHandedWeapon) {
 			leftHandOneHandedWeapon = (OneHandedWeapon) item;
 			leftHandType = ItemType.ONEHANDEDWEAPON;
@@ -259,7 +259,7 @@ public class Player extends Entity {
 		rightHandType = ItemType.NONE;
 	}
 	
-	public void SetRightHand(Item item) throws EquipmentException {
+	public void setRightHand(Item item) throws EquipmentException {
 		if(item instanceof OneHandedWeapon) {
 			rightHandOneHandedWeapon = (OneHandedWeapon) item;
 			rightHandType = ItemType.ONEHANDEDWEAPON;

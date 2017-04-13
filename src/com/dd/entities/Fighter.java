@@ -24,6 +24,15 @@ public class Fighter extends Player {
 
 	@Override
 	public void pickup(Item item) throws InventoryException, EquipmentException {
+		try {
+			addtoInventory(item);
+			equipSuccess = true;
+		} catch (InventoryException e) {
+			throw new EquipmentException(item.titleToString() 
+					+ " could not be picked up because " + titleToString() + "'s "
+					+ "inventory is full");
+		}
+		
 		if(item instanceof Artifact) {
 			try {
 				addtoInventory((Artifact) item);
@@ -35,12 +44,12 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof Shield){
-			if(leftHand == null) {
-				leftHand = (Shield)item;
+			if(isLeftHandEmpty()) {
+				setLeftHand((Shield) item);
 				equipSuccess = true;
 			}
-			else if(rightHand == null) {
-				rightHand = (Shield)item;
+			else if(isRightHandEmpty()) {
+				setRightHand((Shield) item);
 				equipSuccess = true;
 			}
 			else {
@@ -50,8 +59,8 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof Suit) {
-			if(suit == null) {
-				suit = (Suit)item;
+			if(isSuitEmpty()) {
+				setSuit((Suit) item);
 				equipSuccess = true;
 			}
 			else {
@@ -71,8 +80,8 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof TwoHandedWeapon) {
-			if(leftHand == null && rightHand == null) {
-				leftHand = rightHand = (TwoHandedWeapon)item;
+			if(isHandsEmpty()) {
+				setHands((TwoHandedWeapon) item);
 				equipSuccess = true;
 			}
 			else {
@@ -82,13 +91,13 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof OneHandedWeapon) {
-			if(leftHand == null) {
-				leftHand = (OneHandedWeapon)item;
+			if(isLeftHandEmpty()) {
+				setLeftHand((OneHandedWeapon) item);
 				equipSuccess = true;
 				
 			}
-			else if(rightHand == null) {
-				rightHand = (OneHandedWeapon)item;
+			else if(isRightHandEmpty()) {
+				setRightHand((OneHandedWeapon) item);
 				equipSuccess = true;
 			}
 			else {
