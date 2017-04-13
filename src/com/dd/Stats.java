@@ -4,6 +4,7 @@ public class Stats {
 	
 	private int health;
 	private int maxHealth;
+	
 	private int attack;
 	private int defense;
 	
