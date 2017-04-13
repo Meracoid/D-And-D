@@ -13,12 +13,12 @@ public class Player extends Entity {
 
 	private MapPosition mapPosition;
 
-	protected ItemType leftHandType = ItemType.NONE;;
+	protected ItemType leftHandType = ItemType.NONE;
 	protected Magical leftHandMagical;
 	protected OneHandedWeapon leftHandOneHandedWeapon;
 	protected Shield leftHandShield;
 	
-	protected ItemType rightHandType = ItemType.NONE;;
+	protected ItemType rightHandType = ItemType.NONE;
 	protected Magical rightHandMagical;
 	protected OneHandedWeapon rightHandOneHandedWeapon;
 	protected Shield rightHandShield;
@@ -26,8 +26,8 @@ public class Player extends Entity {
 	protected ItemType handsType = ItemType.NONE;
 	protected TwoHandedWeapon hands;
 	
-	protected Suit suit;
-	protected ItemType suitType = ItemType.NONE;;
+	protected Suit suitSuit;
+	protected ItemType suitType = ItemType.NONE;
 	
 	protected boolean equipSuccess;
 
@@ -207,7 +207,8 @@ public class Player extends Entity {
 	}
 	
 	public boolean isLeftHandEmpty() {
-		return leftHandOneHandedWeapon == null
+		return leftHandType == ItemType.NONE
+				&& leftHandOneHandedWeapon == null
 				&& leftHandShield == null
 				&& leftHandMagical == null;
 	}
@@ -247,13 +248,17 @@ public class Player extends Entity {
 		else if(leftHandType == ItemType.MAGICAL) {
 			return (Magical) leftHandMagical;
 		}
+		else if(leftHandType == ItemType.NONE) {
+			return null;
+		}
 		else {
 			throw new EquipmentException("item has incorrect type. ");
 		}
 	}
 	
 	public boolean isRightHandEmpty() {
-		return rightHandMagical == null
+		return rightHandType == ItemType.NONE
+				&& rightHandMagical == null
 				&& rightHandOneHandedWeapon == null
 				&& rightHandShield == null;
 	}
@@ -293,6 +298,9 @@ public class Player extends Entity {
 		else if(rightHandType == ItemType.MAGICAL) {
 			return (Magical) rightHandMagical;
 		}
+		else if(leftHandType == ItemType.NONE) {
+			return null;
+		}
 		else {
 			throw new EquipmentException("item has incorrect type. ");
 		}
@@ -321,23 +329,27 @@ public class Player extends Entity {
 		if(handsType == ItemType.TWOHANDEDWEAPON) {
 			return (TwoHandedWeapon) hands;
 		}
+		else if(leftHandType == ItemType.NONE) {
+			return null;
+		}
 		else {
 			throw new EquipmentException("item has incorrect type. ");
 		}
 	}
 	
 	public boolean isSuitEmpty() {
-		return suit == null;
+		return suitType == ItemType.NONE
+				&& suitSuit == null;
 	}
 	
 	public void dropSuit() {
-		suit = null;
+		suitSuit = null;
 		suitType = ItemType.NONE;
 	}
 	
 	public void setSuit(Item item) throws EquipmentException {
 		if(item instanceof Suit) {
-			suit = (Suit) item;
+			suitSuit = (Suit) item;
 			suitType = ItemType.SUIT;
 		}
 		else {
@@ -347,7 +359,10 @@ public class Player extends Entity {
 	
 	public Item getSuit() throws EquipmentException {
 		if(suitType == ItemType.SUIT) {
-			return (Suit) suit;
+			return (Suit) suitSuit;
+		}
+		else if(leftHandType == ItemType.NONE) {
+			return null;
 		}
 		else {
 			throw new EquipmentException("item has incorrect type. ");
@@ -384,18 +399,18 @@ public class Player extends Entity {
 	
 	public String equipToString() throws EquipmentException {
 		StringBuilder lh = new StringBuilder();
-		if(isLeftHandEmpty())
+		if(!isLeftHandEmpty())
 			lh.append(getLeftHand().getName() + " " + getLeftHand().examineToString());
 		else
 			lh.append("empty");
 		StringBuilder rh = new StringBuilder();
-		if(isRightHandEmpty())
+		if(!isRightHandEmpty())
 			rh.append(getRightHand().getName() + " " + getRightHand().examineToString());
 		else
 			rh.append("empty");
 		StringBuilder s = new StringBuilder();
-		if(suit!=null)
-			s.append(suit.getName() + " " + suit.examineToString());
+		if(!isSuitEmpty())
+			s.append(suitSuit.getName() + " " + suitSuit.examineToString());
 		else
 			s.append("empty");
 		return "Left Hand:  " + lh.toString() + "\n"
