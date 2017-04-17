@@ -186,7 +186,10 @@ public class Room {
 		return monsterMap;
 	}
 	
-	public Monster getMonster(String name) {
+	public Monster getMonster(String name) throws UnknownMonsterException {
+		if(!monsterMap.containsKey(name)){
+			throw new UnknownMonsterException(name + " is not in this room. ");
+		}
 		return monsterMap.get(name);
 	}
 	

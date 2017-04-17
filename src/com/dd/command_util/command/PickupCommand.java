@@ -156,6 +156,11 @@ public class PickupCommand extends CommandHandler {
     			return;
 			}
 		}
-		outputLog.printToLog("This room now contains the following items:\n" + room.examineItems());
+		if(room.hasItems()) {
+			outputLog.printToLog("This room now contains the following items:\n" + room.examineItems());
+		}
+		else {
+			outputLog.printToLog(room.examineItems());
+		}
     }
 }

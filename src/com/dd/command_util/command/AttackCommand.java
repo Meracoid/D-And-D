@@ -28,5 +28,14 @@ public class AttackCommand extends CommandHandler {
     	else {
     		throw new NoPlayerClassException("No player class in CommandHandler. ");
     	}
+		Monster monster = null;
+		try{
+			monster = room.getMonster(args[0]);
+		}
+		catch(UnknownMonsterException UME) {
+			outputLog.printToLog(UME.getMessage());
+		}
+		player.attack(monster);
+		outputLog.printToLog(player.getText());
     }
 }
