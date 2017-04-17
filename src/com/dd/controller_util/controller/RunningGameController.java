@@ -9,7 +9,7 @@ import com.dd.command_util.command.*;
 import com.dd.controller_util.ControllerArgumentPackage;
 import com.dd.controller_util.GameSceneController;
 import com.dd.entities.Player;
-import com.dd.entities.Player.EquipmentException;
+import com.dd.exceptions.*;
 import com.dd.levels.DungeonMap;
 import com.dd.levels.MapPosition;
 import com.dd.levels.Room;
@@ -66,7 +66,7 @@ public class RunningGameController extends GameSceneController{
 				updateMap();
 				updateStatboard();
 			}
-			catch(CommandParser.InvalidCommandException ICE){
+			catch(InvalidCommandException ICE){
 				output.appendText(ICE.getMessage());
 			}
 	    }
@@ -190,7 +190,7 @@ public class RunningGameController extends GameSceneController{
 		commandParser.registerCommand("examine", new ExamineCommand(gameState));
 		commandParser.registerCommand("drop", new DropCommand(gameState));
 		commandParser.registerCommand("attack", new AttackCommand(gameState));
-		commandParser.registerCommand("help", new HelpCommand());
+		commandParser.registerCommand("help", new HelpCommand(gameState));
 		commandParser.registerCommand("pickup", new PickupCommand(gameState));
 		commandParser.registerCommand("use", new UseCommand(gameState));
 	}

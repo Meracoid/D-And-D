@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.dd.entities.Equip;
 import com.dd.entities.monsters.*;
+import com.dd.exceptions.NullRoomException;
 import com.dd.items.*;
 
 public class DungeonMap {
@@ -181,10 +182,12 @@ public class DungeonMap {
 		rooms[position.getY()][position.getX()] = room;
 	}
 	
-	public Room getRoom(MapPosition pos) {
+	public Room getRoom(MapPosition pos) throws NullRoomException {
 		if(isOutOfBounds(pos)) {
-			System.out.println("e:DungeonMap.getRoom():out of bounds of map");
-			return null;
+			throw new NullRoomException("Room is out of bounds. ");
+		}
+		if(rooms[pos.getY()][pos.getX()] == null) {
+			throw new NullRoomException("Room does not exist. ");
 		}
 		return rooms[pos.getY()][pos.getX()];
 	}

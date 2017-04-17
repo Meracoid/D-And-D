@@ -1,6 +1,7 @@
 package com.dd.levels;
 
 import com.dd.entities.Monster;
+import com.dd.exceptions.*;
 import com.dd.items.Item;
 import com.dd.dd_util.ConflictHandlingMap;
 import java.util.Map;
@@ -118,27 +119,5 @@ public class Room {
 			throw new UnknownItemException(name + " is not found in this room. ");
 		}
 		return itemMap.get(name);
-	}
-
-	public class UnknownItemException extends Exception {
-		public UnknownItemException(String message) {
-			super(message);
-		}
-		
-		@Override
-		public String toString() {
-			return super.toString().substring(41);
-		}
-	}
-
-	public class UnknownMonsterException extends Exception {
-		public UnknownMonsterException(String message){
-			super(message);
-		}
-		
-		@Override
-		public String toString() {
-			return super.toString().substring(44);
-		}
 	}
 }
