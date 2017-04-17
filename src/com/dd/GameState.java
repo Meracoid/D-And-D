@@ -1,6 +1,7 @@
 package com.dd;
 
 import com.dd.entities.*;
+import com.dd.exceptions.NoPlayerClassException;
 import com.dd.levels.DungeonMap;
 import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
@@ -15,35 +16,41 @@ public class GameState {
     protected List<Player> allActivePlayers = new ArrayList<Player>();
 	protected DungeonMap map;
 	
-	public GameState(String name, Player newPlayer, DungeonMap map, int maxNumPlayers) {
-	    this.name = name;
-	    if(newPlayer instanceof Fighter) {
-	    	this.activeFighter = (Fighter) newPlayer;
-	    	this.playerType = PlayerType.FIGHTER;
-	    }
-	    else if(newPlayer instanceof Wizard) {
-	    	this.activeWizard = (Wizard) newPlayer;
-	    	this.playerType = PlayerType.WIZARD;
-	    }
+	public GameState(String name, Fighter newFighter, DungeonMap map, int maxNumPlayers) {
+	    this.name = name;	    
+	   	this.activeFighter = newFighter;
+	   	this.playerType = PlayerType.FIGHTER;
         this.maxNumPlayers = maxNumPlayers;
         allActivePlayers = new ArrayList<Player>();
         this.map = map;
 	}
-
-	public GameState(String name, Player newPlayer, DungeonMap map) {
-        this.name = name;
-        if(newPlayer instanceof Fighter) {
-	    	this.activeFighter = (Fighter) newPlayer;
-	    	this.playerType = PlayerType.FIGHTER;
-	    }
-	    else if(newPlayer instanceof Wizard) {
-	    	this.activeWizard = (Wizard) newPlayer;
-	    	this.playerType = PlayerType.WIZARD;
-	    }
+	
+	public GameState(String name, Wizard newWizard, DungeonMap map, int maxNumPlayers) {
+	    this.name = name;	    
+	   	this.activeWizard = newWizard;
+	   	this.playerType = PlayerType.WIZARD;
+        this.maxNumPlayers = maxNumPlayers;
+        allActivePlayers = new ArrayList<Player>();
+        this.map = map;
+	}
+	
+	public GameState(String name, Fighter newFighter, DungeonMap map) {
+	    this.name = name;	    
+	   	this.activeFighter = newFighter;
+	   	this.playerType = PlayerType.FIGHTER;
         this.maxNumPlayers = 1;
         allActivePlayers = new ArrayList<Player>();
         this.map = map;
-    }
+	}
+	
+	public GameState(String name, Wizard newWizard, DungeonMap map) {
+	    this.name = name;	    
+	   	this.activeWizard = newWizard;
+	   	this.playerType = PlayerType.WIZARD;
+        this.maxNumPlayers = 1;
+        allActivePlayers = new ArrayList<Player>();
+        this.map = map;
+	}
 	
 	public GameState(String name, DungeonMap map) {
         this.name = name;
@@ -60,8 +67,16 @@ public class GameState {
     		return (Wizard) activeWizard;
     	}
     	else {
-    		return new Player(); //PROBLEM HAPPENED IF THIS RETURNS
+    		throw new NoPlayerClassException("No player type. ");
     	}
+    }
+    
+    public Fighter getActiveFighter() {
+    	return activeFighter;
+    }
+    
+    public Wizard getActiveWizard() {
+    	return activeWizard;
     }
     
     public Player getActivePlayer(PlayerType Type) {
@@ -72,7 +87,7 @@ public class GameState {
     		return (Wizard) activeWizard;
     	}
     	else {
-       		return new Player(); //PROBLEM HAPPENED IF THIS RETURNS
+       		throw new NoPlayerClassException("No player type. ");
     	}
     }
     
