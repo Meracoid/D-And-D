@@ -32,7 +32,7 @@ public class SuitArea {
 			suitType = ItemType.SUIT;
 		}
 		else {
-			throw new ItemTypeException(item.getName() + " cannot be equipped to suit. ");
+			throw new ItemTypeException(item.titleToString() + " cannot be equipped to suit. ");
 		}
 	}
 	

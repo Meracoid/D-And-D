@@ -37,7 +37,7 @@ public class Hand {
 			handType = ItemType.MAGICAL;
 		}
 		else {
-			throw new ItemTypeException(item.getName() + " cannot be equipped to left hand. ");
+			throw new ItemTypeException(item.titleToString() + " cannot be equipped to left hand. ");
 		}
 	}
 	

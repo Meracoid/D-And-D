@@ -32,7 +32,7 @@ public class TwoHands {
 			twoHandsType = ItemType.TWOHANDEDWEAPON;
 		}
 		else {
-			throw new ItemTypeException(item.getName() + " cannot be equipped to both hands. ");
+			throw new ItemTypeException(item.titleToString() + " cannot be equipped to both hands. ");
 		}
 	}
 	
