@@ -1,6 +1,7 @@
 package com.dd.entities;
 
 import com.dd.Stats;
+import com.dd.exceptions.*;
 import com.dd.items.*;
 import com.dd.levels.MapPosition;
 
@@ -33,13 +34,23 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof Shield){
-			if(isLeftHandEmpty()) {
-				setLeftHand((Shield) item);
-				pickupSuccess = true;
+			if(leftHand.isEmpty()) {
+				try {
+					leftHand.setHand((Shield) item);
+					pickupSuccess = true;
+				}
+				catch (ItemTypeException ITE) {
+					throw new EquipmentException(item.titleToString() + "could not be equpped to " + titleToString() +"'s left hand. ");
+				}
 			}
-			else if(isRightHandEmpty()) {
-				setRightHand((Shield) item);
-				pickupSuccess = true;
+			else if(rightHand.isEmpty()) {
+				try {
+					rightHand.setHand((Shield) item);
+					pickupSuccess = true;
+				}
+				catch (ItemTypeException e) {
+					throw new EquipmentException(item.titleToString() + "could not be equpped to " + titleToString() +"'s right hand. ");
+				}
 			}
 			else {
 				throw new EquipmentException(item.titleToString() 
@@ -48,8 +59,8 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof Suit) {
-			if(isSuitEmpty()) {
-				setSuit((Suit) item);
+			if(suitArea.isEmpty()) {
+				suitArea.setSuitArea((Suit) item);
 				pickupSuccess = true;
 			}
 			else {
@@ -69,8 +80,8 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof TwoHandedWeapon) {
-			if(isHandsEmpty()) {
-				setHands((TwoHandedWeapon) item);
+			if(twoHands.isEmpty()) {
+				twoHands.setTwoHands((TwoHandedWeapon) item);
 				pickupSuccess = true;
 			}
 			else {
@@ -80,14 +91,22 @@ public class Fighter extends Player {
 			}
 		}
 		else if(item instanceof OneHandedWeapon) {
-			if(isLeftHandEmpty()) {
-				setLeftHand((OneHandedWeapon) item);
-				pickupSuccess = true;
-				
+			if(leftHand.isEmpty()) {
+				try {
+					leftHand.setHand((OneHandedWeapon) item);
+					pickupSuccess = true;
+				} 
+				catch (ItemTypeException e) {
+					throw new EquipmentException(item.titleToString() + "could not be equipped to " + titleToString() + "'s left hand");
+				}
 			}
-			else if(isRightHandEmpty()) {
-				setRightHand((OneHandedWeapon) item);
-				pickupSuccess = true;
+			else if(rightHand.isEmpty()) {
+				try {
+					rightHand.setHand((OneHandedWeapon) item);
+					pickupSuccess = true;
+				} catch (ItemTypeException e) {
+					throw new EquipmentException(item.titleToString() + "could not be equipped to " + titleToString() + "'s right hand");
+				}
 			}
 			else {
 				throw new EquipmentException(item.titleToString() 

@@ -4,6 +4,8 @@ import com.dd.Stats;
 import com.dd.items.*;
 import com.dd.levels.MapPosition;
 import com.dd.dd_util.ConflictHandlingMap;
+import com.dd.entities.equipments.*;
+import com.dd.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,23 +13,12 @@ import java.util.Map;
 
 public class Player extends Entity {
 
-	private MapPosition mapPosition;
+	protected MapPosition mapPosition;
 
-	protected ItemType leftHandType = ItemType.NONE;
-	protected Magical leftHandMagical;
-	protected OneHandedWeapon leftHandOneHandedWeapon;
-	protected Shield leftHandShield;
-	
-	protected ItemType rightHandType = ItemType.NONE;
-	protected Magical rightHandMagical;
-	protected OneHandedWeapon rightHandOneHandedWeapon;
-	protected Shield rightHandShield;
-	
-	protected ItemType handsType = ItemType.NONE;
-	protected TwoHandedWeapon hands;
-	
-	protected Suit suitSuit;
-	protected ItemType suitType = ItemType.NONE;
+	public Hand leftHand;
+	public Hand rightHand;
+	public TwoHands twoHands;
+	public SuitArea suitArea;
 	
 	protected boolean pickupSuccess;
 	protected boolean dropSuccess;
@@ -39,20 +30,30 @@ public class Player extends Entity {
 	public Player(String name, MapPosition pos, Stats stats) {
 		super(name, stats);
 		setMapPosition(pos);
+		initBody();
 	}
 
 	public Player(String name) {
 		super(name);
 		setMapPosition(new MapPosition());
+		initBody();
 	}
 	
 	public Player() {
 		super();
 		setMapPosition(new MapPosition());
+		initBody();
+	}
+	
+	public void initBody() {
+		this.leftHand = new Hand();
+		this.rightHand  = new Hand();
+		this.twoHands = new TwoHands();
+		this.suitArea = new SuitArea();
 	}
 	
 	public void pickup(Item item) throws InventoryException, EquipmentException {
-		changeStats(item.getStatChange());
+		
 	}
 	
 	public void drop(Equip bodyArea) throws EquipmentException {
@@ -61,8 +62,8 @@ public class Player extends Entity {
 		String errorTrailer = "";
 		switch(bodyArea) {
 			case LEFTHAND:
-				if(!isLeftHandEmpty()) {
-					dropItem = getLeftHand();
+				if(!leftHand.isEmpty()) {
+					dropItem = leftHand.getHand();
 					if(dropItem instanceof Magical) {
 						dropItem = (Magical) dropItem;
 					}
@@ -75,7 +76,7 @@ public class Player extends Entity {
 					else {
 						throw new EquipmentException("Drop item has no type. ");
 					}
-					dropLeftHand();
+					leftHand.dropHand();
 					dropSuccess = true;
 				}
 				else {
@@ -83,8 +84,8 @@ public class Player extends Entity {
 				}
 				break;
 			case RIGHTHAND:
-				if(!isRightHandEmpty()) {
-					dropItem = getRightHand();
+				if(!rightHand.isEmpty()) {
+					dropItem = rightHand.getHand();
 					if(dropItem instanceof Magical) {
 						dropItem = (Magical) dropItem;
 					}
@@ -97,7 +98,7 @@ public class Player extends Entity {
 					else {
 						throw new EquipmentException("Drop item has no type. ");
 					}
-					dropRightHand();
+					rightHand.dropHand();
 					dropSuccess = true;
 				}
 				else {
@@ -105,15 +106,15 @@ public class Player extends Entity {
 				}
 				break;
 			case HANDS:
-				if(!isHandsEmpty()) {
-					dropItem = getHands();
+				if(!twoHands.isEmpty()) {
+					dropItem = twoHands.getTwoHands();
 					if(dropItem instanceof TwoHandedWeapon) {
 						dropItem = (TwoHandedWeapon) dropItem;
 					}
 					else {
 						throw new EquipmentException("Drop item has no type. ");
 					}
-					dropRightHand();
+					rightHand.dropHand();
 					dropSuccess = true;
 				}
 				else {
@@ -121,15 +122,15 @@ public class Player extends Entity {
 				}
 				break;
 			case SUIT:
-				if(!isSuitEmpty()) {
-					dropItem = getSuit();
+				if(!suitArea.isEmpty()) {
+					dropItem = suitArea.getSuitArea();
 					if(dropItem instanceof Suit) {
 						dropItem = (Suit) dropItem;
 					}
 					else {
 						throw new EquipmentException("Drop item has no type. ");
 					}
-					dropRightHand();
+					suitArea.dropSuitArea();
 					dropSuccess = true;
 				}
 				else {
@@ -217,204 +218,36 @@ public class Player extends Entity {
 
 	public List<Item> removeAllEquipment() throws EquipmentException {
 		List<Item> itemList = new ArrayList<Item>();
-		if(isLeftHandEmpty() || isRightHandEmpty()) {
-			if(getLeftHand().equals(getRightHand())) {
-				itemList.add(getLeftHand());
+		if(leftHand.isEmpty() || rightHand.isEmpty()) {
+			if(leftHand.getHand().equals(rightHand.getHand())) {
+				itemList.add(leftHand.getHand());
 			}
 			else {
-				if(isLeftHandEmpty()) {
-					itemList.add(getLeftHand());
+				if(leftHand.isEmpty()) {
+					itemList.add(leftHand.getHand());
 				}
-				if(isRightHandEmpty()) {
-					itemList.add(getRightHand());
+				if(rightHand.isEmpty()) {
+					itemList.add(rightHand.getHand());
 				}
 			}
 		}
-		if(isSuitEmpty()) {
-			itemList.add(getSuit());
+		if(suitArea.isEmpty()) {
+			itemList.add(suitArea.getSuitArea());
 		}
-		dropHands();
-		dropSuit();
+		twoHands.dropTwoHands();
+		suitArea.dropSuitArea();
 		return itemList;
 	}
 
 	public void discardAllEquipment() {
-		dropHands();
-		dropSuit();
+		twoHands.dropTwoHands();
+		suitArea.dropSuitArea();
 	}
 	
-	public boolean isLeftHandEmpty() {
-		return leftHandType == ItemType.NONE;
-//				&& leftHandOneHandedWeapon == null
-//				&& leftHandShield == null
-//				&& leftHandMagical == null;
-	}
 	
-	public void dropLeftHand() {
-		leftHandOneHandedWeapon = null;
-		leftHandShield = null;
-		leftHandShield = null;
-		leftHandType = ItemType.NONE;
-	}
-	
-	public void setLeftHand(Item item) throws EquipmentException {
-		if(item instanceof OneHandedWeapon) {
-			leftHandOneHandedWeapon = (OneHandedWeapon) item;
-			leftHandType = ItemType.ONEHANDEDWEAPON;
-		}
-		else if(item instanceof Shield) {
-			leftHandShield = (Shield) item;
-			leftHandType = ItemType.SHIELD;
-		}
-		else if(item instanceof Magical) {
-			leftHandMagical = (Magical) item;
-			leftHandType = ItemType.MAGICAL;
-		}
-		else {
-			throw new EquipmentException(item.titleToString() + " cannot be set to a hand. ");
-		}
-	}
-	
-	public Item getLeftHand() throws EquipmentException {
-		if(leftHandType == ItemType.ONEHANDEDWEAPON) {
-			return (OneHandedWeapon) leftHandOneHandedWeapon;
-		}
-		else if(leftHandType == ItemType.SHIELD) {
-			return (Shield) leftHandShield;
-		}
-		else if(leftHandType == ItemType.MAGICAL) {
-			return (Magical) leftHandMagical;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-	
-	public ItemType getLeftHandType() {
-		return leftHandType;
-	}
-	
-	public boolean isRightHandEmpty() {
-		return rightHandType == ItemType.NONE;
-//				&& rightHandMagical == null
-//				&& rightHandOneHandedWeapon == null
-//				&& rightHandShield == null;
-	}
-	
-	public void dropRightHand() {
-		rightHandOneHandedWeapon = null;
-		rightHandShield = null;
-		rightHandShield = null;
-		rightHandType = ItemType.NONE;
-	}
-	
-	public void setRightHand(Item item) throws EquipmentException {
-		if(item instanceof OneHandedWeapon) {
-			rightHandOneHandedWeapon = (OneHandedWeapon) item;
-			rightHandType = ItemType.ONEHANDEDWEAPON;
-		}
-		else if(item instanceof Shield) {
-			rightHandShield = (Shield) item;
-			rightHandType = ItemType.SHIELD;
-		}
-		else if(item instanceof Magical) {
-			rightHandMagical = (Magical) item;
-			rightHandType = ItemType.MAGICAL;
-		}
-		else {
-			throw new EquipmentException(item.titleToString() + " cannot be set to a hand. ");
-		}
-	}
-	
-	public Item getRightHand() throws EquipmentException {
-		if(rightHandType == ItemType.ONEHANDEDWEAPON) {
-			return (OneHandedWeapon) rightHandOneHandedWeapon;
-		}
-		else if(rightHandType == ItemType.SHIELD) {
-			return (Shield) rightHandShield;
-		}
-		else if(rightHandType == ItemType.MAGICAL) {
-			return (Magical) rightHandMagical;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-	
-	public ItemType getRightHandType() {
-		return rightHandType;
-	}
-	
-	public boolean isHandsEmpty() throws EquipmentException {
-		if(!getLeftHand().equals(getRightHand())) {
-			throw new EquipmentException("Left hand and right hand contain different items. ");
-		}
-		return isLeftHandEmpty() && isRightHandEmpty();
-	}
-	
-	public void dropHands() {
-		dropLeftHand();
-		dropRightHand();
-	}
-	
-	public void setHands(Item item) throws EquipmentException {
-		if(item instanceof TwoHandedWeapon) {
-			hands = (TwoHandedWeapon) item;
-			handsType = ItemType.TWOHANDEDWEAPON;
-		}
-		else {
-			throw new EquipmentException(item.titleToString() + " cannot be set to both hands. ");
-		}
-	}
-	
-	public Item getHands() throws EquipmentException {
-		if(handsType == ItemType.TWOHANDEDWEAPON) {
-			return (TwoHandedWeapon) hands;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-	
-	public ItemType getHandsType() {
-		return handsType;
-	}
-	
-	public boolean isSuitEmpty() {
-		return suitType == ItemType.NONE;
-//				&& suitSuit == null;
-	}
-	
-	public void dropSuit() {
-		suitSuit = null;
-		suitType = ItemType.NONE;
-	}
-	
-	public void setSuit(Item item) throws EquipmentException {
-		if(item instanceof Suit) {
-			suitSuit = (Suit) item;
-			suitType = ItemType.SUIT;
-		}
-		else {
-			throw new EquipmentException(item.titleToString() + " cannot be set to a Suit. ");
-		}
-	}
 	
 	public MapPosition getPostion() {
 		return mapPosition;
-	}
-
-	public Item getSuit() throws EquipmentException {
-		if(suitType == ItemType.SUIT) {
-			return (Suit) suitSuit;
-		}
-		else {
-			throw new EquipmentException("item has incorrect type. ");
-		}
-	}
-	
-	public ItemType getSuitType() {
-		return suitType;
 	}
 
 	public void setMapPosition(MapPosition p) {
@@ -424,9 +257,33 @@ public class Player extends Entity {
 	public String getName() {
 		return name;
 	}
+	
+	public Item getLeftHand() {
+		return leftHand.getHand();
+	}
+	
+	public ItemType leftHandType() {
+		return leftHand.getHandType();
+	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Item getRightHand() {
+		return rightHand.getHand();
+	}
+	
+	public ItemType rightHandType() {
+		return rightHand.getHandType();
+	}
+
+	public TwoHandedWeapon getTwoHands() {
+		return twoHands.getTwoHands();
+	}
+
+	public Suit getSuitArea() {
+		return suitArea.getSuitArea();
+	}
+
+	public void setSuitArea(SuitArea suitArea) {
+		this.suitArea = suitArea;
 	}
 	
 	public Map<String, Item> getInventory() {
@@ -449,20 +306,20 @@ public class Player extends Entity {
 		dropSuccess = false;
 	}
 	
-	public String equipToString() throws EquipmentException {
+	public String equipToString() {
 		StringBuilder lh = new StringBuilder();
-		if(!isLeftHandEmpty())
-			lh.append(getLeftHand().getName() + " " + getLeftHand().examineToString());
+		if(!leftHand.isEmpty())
+			lh.append(leftHand.getHand().getName() + " " + leftHand.getHand().examineToString());
 		else
 			lh.append("empty");
 		StringBuilder rh = new StringBuilder();
-		if(!isRightHandEmpty())
-			rh.append(getRightHand().getName() + " " + getRightHand().examineToString());
+		if(!rightHand.isEmpty())
+			rh.append(rightHand.getHand().getName() + " " + rightHand.getHand().examineToString());
 		else
 			rh.append("empty");
 		StringBuilder s = new StringBuilder();
-		if(!isSuitEmpty())
-			s.append(suitSuit.getName() + " " + suitSuit.examineToString());
+		if(!suitArea.isEmpty())
+			s.append(suitArea.getSuitArea().getName() + " " + suitArea.getSuitArea().examineToString());
 		else
 			s.append("empty");
 		return "Left Hand:  " + lh.toString() + "\n"
@@ -484,29 +341,5 @@ public class Player extends Entity {
 				+ "\n" + equipToString()
 				+ "\n" + inventoryToString();
 				
-	}
-	
-	public class InventoryException extends Exception {
-		
-		public InventoryException(String message){
-			super(message);
-		}
-		
-		@Override
-		public String toString() {
-			return super.toString().substring(43);
-		}
-	}
-
-	public class EquipmentException extends Exception {
-		
-		public EquipmentException(String message) {
-			super(message);
-		}
-		
-		@Override
-		public String toString() {
-			return super.toString().substring(43);
-		}
 	}
 }
