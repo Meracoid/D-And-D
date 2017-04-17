@@ -1,24 +1,28 @@
 package com.dd.levels;
 
 import com.dd.entities.Monster;
+import com.dd.entities.equipments.ItemList;
 import com.dd.exceptions.*;
-import com.dd.items.Item;
+import com.dd.items.*;
 import com.dd.dd_util.ConflictHandlingMap;
 import java.util.Map;
 
 public class Room {
-	private Map<String, Item> itemMap;
+	
+	private ItemList itemList;
+	//private Map<String, Item> itemMap;
 	private Map<String, Monster> monsterMap;
 	
 	public Room() {
-		itemMap = new ConflictHandlingMap<Item>();
+		itemList = new ItemList();
+		//itemMap = new ConflictHandlingMap<Item>();
 		monsterMap = new ConflictHandlingMap<Monster>();
 	}
 	
 	public String examineItems() {
 		StringBuilder outputSB = new StringBuilder();
 		if(hasItems()) {
-			getItemList().values().forEach((v) -> outputSB.append(
+			getItemMap().values().forEach((v) -> outputSB.append(
 					v.titleToString() + " "
 					+ v.examineToString() + "\n"));
 		}
@@ -39,13 +43,13 @@ public class Room {
 		}
 		if(hasItems()) {
 			outputText.append("This room contains ");
-			getItemList().forEach((k,v) -> outputText.append("a " + v.typeToString() + " called \"" + k + "\" "));
+			getItemMap().forEach((k, v) -> outputText.append("a " + v.typeToString() + " called \"" + k + "\" "));
 		}
 		return outputText.toString();
 	}
 
 	public boolean isEmpty() {
-		return getItemList().isEmpty() && getMonsterList().isEmpty();
+		return getItemMap().isEmpty() && getMonsterList().isEmpty();
 	}
 	
 	public boolean hasMonster() {
@@ -53,28 +57,100 @@ public class Room {
 	}
 	
 	public boolean hasItems() {
-		return !getItemList().isEmpty();
+		return !getItemMap().isEmpty();
 	}
-
-	public void addItem(Item item) {
-		itemMap.put(item.getName(), item);
-	}
-
-	public void removeItem(String itemName) throws UnknownItemException {
-		if(!itemMap.containsKey(itemName)) {
-			throw new UnknownItemException("The item \""
-											+ itemName
-											+ "\" does not exist in this room. Removal failed. ");
+	
+	public void addItem(Item item) throws UnknownItemException {
+		if(item instanceof Artifact) {
+			itemList.add((Artifact) item);
 		}
-		itemMap.get(itemName);
-		itemMap.remove(itemName);
+		else if(item instanceof Magical) {
+			itemList.add((Magical) item);
+		}
+		else if(item instanceof OneHandedWeapon) {
+			itemList.add((OneHandedWeapon) item);
+		}
+		else if(item instanceof Potion) {
+			itemList.add((Potion) item);
+		}
+		else if(item instanceof Shield) {
+			itemList.add((Shield) item);
+		}
+		else if(item instanceof Suit) {
+			itemList.add((Suit) item);
+		}
+		else if(item instanceof TwoHandedWeapon) {
+			itemList.add((TwoHandedWeapon) item);
+		}
+		else {
+			throw new UnknownItemException("Item added to room has no type. ");
+		}
 	}
-
-	public void discardItem(String itemName) throws UnknownItemException {
-		if(itemMap.remove(itemName) != null){
-			throw new UnknownItemException("The item \""
-											+ itemName
-											+ "\" does not exist in this room. Discard failed. ");
+	
+	public void removeItem(String itemName) throws UnknownItemException {
+		if(!getItemMap().containsKey(itemName)) {
+			throw new UnknownItemException("Item not found in room. ");
+		}
+		try {
+			if(getItemMap().get(itemName) instanceof Artifact) {
+				itemList.remove((Artifact) getItemMap().get(itemName));
+			}
+			else if(getItemMap().get(itemName) instanceof Magical) {
+				itemList.remove((Magical) getItemMap().get(itemName));
+			}
+			else if(getItemMap().get(itemName) instanceof OneHandedWeapon) {
+				itemList.remove((OneHandedWeapon) getItemMap().get(itemName));
+			}
+			else if(getItemMap().get(itemName) instanceof Potion) {
+				itemList.remove((Potion) getItemMap().get(itemName));
+			}
+			else if(getItemMap().get(itemName) instanceof Shield) {
+				itemList.remove((Shield) getItemMap().get(itemName));
+			}
+			else if(getItemMap().get(itemName) instanceof Suit) {
+				itemList.remove((Suit) getItemMap().get(itemName));
+			}
+			else if(getItemMap().get(itemName) instanceof TwoHandedWeapon) {
+				itemList.remove((TwoHandedWeapon) getItemMap().get(itemName));
+			}
+			else {
+				throw new UnknownItemException(getItemMap().get(itemName).getName() + " has no type. ");
+			}
+		}
+		catch(InventoryException IE) {
+			throw new UnknownItemException(getItemMap().get(itemName).titleToString() + " is not found in the room. ");
+		}
+	}
+	
+	public void removeItem(Item item) throws UnknownItemException {
+		try {
+			if(item instanceof Artifact) {
+				itemList.remove((Artifact) item);
+			}
+			else if(item instanceof Magical) {
+				itemList.remove((Magical) item);
+			}
+			else if(item instanceof OneHandedWeapon) {
+				itemList.remove((OneHandedWeapon) item);
+			}
+			else if(item instanceof Potion) {
+				itemList.remove((Potion) item);
+			}
+			else if(item instanceof Shield) {
+				itemList.remove((Shield) item);
+			}
+			else if(item instanceof Suit) {
+				itemList.remove((Suit) item);
+			}
+			else if(item instanceof TwoHandedWeapon) {
+				itemList.remove((TwoHandedWeapon) item);
+			}
+			else {
+				throw new UnknownItemException(item.getName() + " has no type. ");
+			}
+		}
+		catch(InventoryException IE) {
+			throw new UnknownItemException(item.titleToString() + " is not found in the room. ");
 		}
 	}
 
@@ -102,8 +178,8 @@ public class Room {
 		}
 	}
 
-	public Map<String, Item> getItemList() {
-		return itemMap;
+	public Map<String, Item> getItemMap() {
+		return this.itemList.getItemMap();
 	}
 
 	public Map<String, Monster> getMonsterList() {
@@ -115,16 +191,73 @@ public class Room {
 	}
 	
 	public Item getItem(String name) throws UnknownItemException {
-		if(!itemMap.containsKey(name)) {
+		if(!itemList.getItemMap().containsKey(name)) {
 			throw new UnknownItemException(name + " is not found in this room. ");
 		}
-		return itemMap.get(name);
+		if(itemList.getItemMap().get(name) instanceof Artifact) {
+			return (Artifact) itemList.getItemMap().get(name);
+		}
+		else if(itemList.getItemMap().get(name) instanceof Magical) {
+			return (Magical) itemList.getItemMap().get(name);
+		}
+		else if(itemList.getItemMap().get(name) instanceof OneHandedWeapon) {
+			return (OneHandedWeapon) itemList.getItemMap().get(name);
+		}
+		else if(itemList.getItemMap().get(name) instanceof Potion) {
+			return (Potion) itemList.getItemMap().get(name);
+		}
+		else if(itemList.getItemMap().get(name) instanceof Shield) {
+			return (Shield) itemList.getItemMap().get(name);
+		}
+		else if(itemList.getItemMap().get(name) instanceof Suit) {
+			return (Suit) itemList.getItemMap().get(name);
+		}
+		else if(itemList.getItemMap().get(name) instanceof TwoHandedWeapon) {
+			return (TwoHandedWeapon) itemList.getItemMap().get(name);
+		}
+		else {
+			throw new UnknownItemException(itemList.getItemMap().get(name).getName() + " has no type. ");
+		}
 	}
 	
 	public Item getItem(Item item) throws UnknownItemException {
-		if(!itemMap.containsValue(item)) {
-			throw new UnknownItemException(item.titleToString() + " is not found in this room. ");
+		if(item instanceof Artifact) {
+			return (Artifact) item;
 		}
-		return itemMap.get(item.getName());
+		else if(item instanceof Magical) {
+			return (Magical) item;
+		}
+		else if(item instanceof OneHandedWeapon) {
+			return (OneHandedWeapon) item;
+		}
+		else if(item instanceof Potion) {
+			return (Potion) item;
+		}
+		else if(item instanceof Shield) {
+			return (Shield) item;
+		}
+		else if(item instanceof Suit) {
+			return (Suit) item;
+		}
+		else if(item instanceof TwoHandedWeapon) {
+			return (TwoHandedWeapon) item;
+		}
+		else {
+			throw new UnknownItemException(item + " has no type. ");
+		}
 	}
+	
+//	public Item getItem(String name) throws UnknownItemException {
+//		if(!itemMap.containsKey(name)) {
+//			throw new UnknownItemException(name + " is not found in this room. ");
+//		}
+//		return itemMap.get(name);
+//	}
+	
+//	public Item getItem(Item item) throws UnknownItemException {
+//		if(!itemMap.containsValue(item)) {
+//			throw new UnknownItemException(item.titleToString() + " is not found in this room. ");
+//		}
+//		return itemMap.get(item.getName());
+//	}
 }

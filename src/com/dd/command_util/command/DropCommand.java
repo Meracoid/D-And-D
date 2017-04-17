@@ -121,7 +121,12 @@ public class DropCommand extends CommandHandler {
 			}
 		}
 		if(player.isDropSuccess()) {
-			this.room.addItem(dropItem);
+			try {
+				this.room.addItem(dropItem);
+			} 
+			catch (UnknownItemException UIE) {
+				outputLog.printToLog(UIE.getMessage());
+			}
 		}
 	
 	outputLog.printToLog("This room now contains the following items:\n" + this.room.examineItems());

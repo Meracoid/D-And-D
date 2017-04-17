@@ -37,11 +37,38 @@ public class Inventory {
 		return artifacts.get(artifacts.indexOf(artifact));
 	}
 	
-	public Potion get(Magical magical) throws InventoryException {
+	public Magical get(Magical magical) throws InventoryException {
 		if(!magicals.contains(magical)) {
 			throw new InventoryException(magical.titleToString() + " is not in your inventory. ");
 		}
-		return potions.get(potions.indexOf(magical));
+		return magicals.get(magicals.indexOf(magical));
+	}
+	
+	public void add(Potion potion) throws InventoryException {
+		if(size >= maxSize) {
+			throw new InventoryException(potion.titleToString() + " cannot be added to your inventory, "
+					+ "because it is full. ");
+		}
+		this.potions.add(potion);
+		this.size++;
+	}
+	
+	public void add(Artifact artifact) throws InventoryException {
+		if(size >= maxSize) {
+			throw new InventoryException(artifact.titleToString() + " cannot be added to your inventory, "
+					+ "because it is full. ");
+		}
+		this.artifacts.add(artifact);
+		this.size++;
+	}
+	
+	public void add(Magical magical) throws InventoryException {
+		if(size >= maxSize) {
+			throw new InventoryException(magical.titleToString() + " cannot be added to your inventory, "
+					+ "because it is full. ");
+		}
+		this.magicals.add(magical);
+		this.size++;
 	}
 	
 	public void remove(Potion potion) throws InventoryException {
@@ -98,5 +125,9 @@ public class Inventory {
 
 	public ArrayList<Magical> getMagicals() {
 		return magicals;
+	}
+	
+	public boolean isEmpty() {
+		return size == 0;
 	}
 }	

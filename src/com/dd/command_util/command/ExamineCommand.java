@@ -40,7 +40,7 @@ public class ExamineCommand extends CommandHandler {
 		case "item":
 		case "items":
 			if(room.hasItems()) {
-				room.getItemList().values().forEach((v) -> outputLog.printToLog(
+				room.getItemMap().values().forEach((v) -> outputLog.printToLog(
 						v.titleToString() + " "
 						+ v.examineToString() + "\n"));
 			}

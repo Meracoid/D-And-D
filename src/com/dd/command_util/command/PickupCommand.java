@@ -36,7 +36,7 @@ public class PickupCommand extends CommandHandler {
 		switch(args[0]) {
 		case "items":
 			ArrayList<String> equippedItemNames = new ArrayList<String>();;
-			for(Item equippedItem : room.getItemList().values()) {
+			for(Item equippedItem : room.getItemMap().values()) {
 				player.resetPickupSuccess();
 				try {
 					item = room.getItem(equippedItem);

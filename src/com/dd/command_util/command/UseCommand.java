@@ -38,8 +38,8 @@ public class UseCommand extends CommandHandler {
     		item = player.getInventory().getInventoryMap().get(args[0]);
     	}
     	else {
-    		if(room.getItemList().containsKey(args[0])) {
-        		item = room.getItemList().get(args[0]);
+    		if(room.getItemMap().containsKey(args[0])) {
+        		item = room.getItemMap().get(args[0]);
         	}
         	else {
         		outputLog.printToLog("this room does not conatain \""
