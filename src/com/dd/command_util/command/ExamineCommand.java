@@ -4,33 +4,22 @@ import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
 import com.dd.entities.Monster;
-import com.dd.entities.Player;
+import com.dd.exceptions.*;
 import com.dd.items.Item;
-import com.dd.levels.DungeonMap;
-import com.dd.levels.Room;
-import com.dd.levels.Room.UnknownItemException;
 
 public class ExamineCommand extends CommandHandler {
-	private Player player;
-	private DungeonMap map;
-	private Room room;
 
     public ExamineCommand(GameState gameState) {
-    	player = gameState.getActivePlayer();
-    	map = gameState.getMap();
+    	super(gameState);
 	}
 
     @Override
     public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException {
     	if(args[0] == null) {
-    		throw new InvalidArgumentException("Choose something to examine. "
+    		throw new InvalidArgumentException("Choose something to " + commandName + ". "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
     	}
-//WE CAN'T DO THIS EXCEPTION WITHOUT QUOTES
-//    	if(args.length > 2) {
-//    		throw new InvalidArgumentException("Type \"help\" for help using the " + commandName +" command. ");
-//    	}
-    	room = map.getRoom(player.getPostion());
+		updateState();
     	switch(args[0].toLowerCase()) {
     	case "room":
 			outputLog.printToLog(room.enterRoomText());

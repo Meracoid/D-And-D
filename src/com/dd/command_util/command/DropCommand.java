@@ -3,125 +3,62 @@ package com.dd.command_util.command;
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
-import com.dd.entities.Player;
-import com.dd.entities.PlayerType;
-import com.dd.entities.Wizard;
-import com.dd.entities.Equip;
-import com.dd.entities.Fighter;
-import com.dd.entities.ItemType;
-import com.dd.entities.Player.EquipmentException;
-import com.dd.entities.Player.InventoryException;
-import com.dd.items.Artifact;
-import com.dd.items.Item;
-import com.dd.items.Magical;
-import com.dd.items.OneHandedWeapon;
-import com.dd.items.Potion;
-import com.dd.items.Shield;
-import com.dd.items.Suit;
-import com.dd.items.TwoHandedWeapon;
-import com.dd.levels.DungeonMap;
-import com.dd.levels.Room;
+import com.dd.entities.*;
+import com.dd.exceptions.*;
+import com.dd.entities.equipments.*;
+import com.dd.items.*;
 
 public class DropCommand extends CommandHandler {
-	private GameState gameState;
-	private Wizard wizard;
-    private Fighter fighter;
-    private Player player;
-    private PlayerType playerType = PlayerType.NONE;
-	private DungeonMap map;
-	private Room currRoom;
+	
 	private Item dropItem;
 
     public DropCommand(GameState gameState) {
-    	this.gameState = gameState;
-    	if(gameState.getActivePlayer() instanceof Fighter) {
-        	player = fighter = (Fighter) gameState.getActivePlayer();
-        	playerType = playerType.FIGHTER;
-        }
-        else if(gameState.getActivePlayer() instanceof Wizard) {
-        	player = wizard = (Wizard) gameState.getActivePlayer();
-        	playerType = PlayerType.WIZARD;
-        }
-    	this.map = gameState.getMap();
+    	super(gameState);
 	}
 
 	@Override
 	public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException {
-		if(gameState.getActivePlayer() instanceof Fighter) {
-        	player = fighter = (Fighter) gameState.getActivePlayer();
-        	playerType = playerType.FIGHTER;
-        }
-        else if(gameState.getActivePlayer() instanceof Wizard) {
-        	player = wizard = (Wizard) gameState.getActivePlayer();
-        	playerType = PlayerType.WIZARD;
-        }
-		this.currRoom = map.getRoom(player.getPostion());
-		player.resetDropSuccess();
 		if(args[0] == null) {
-    		throw new InvalidArgumentException("Choose something to pickup. "
+    		throw new InvalidArgumentException("Choose something to " + commandName + ". "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
     	}
+		Player player = updateState();
+		if(playerType == PlayerType.FIGHTER) {
+    		player = (Fighter) player;
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		player = (Wizard) player; 
+    	}
+    	else {
+    		throw new NoPlayerClassException("No player class in CommandHandler. ");
+    	}
+		player.resetDropSuccess();
 		switch (args[0]) {
 		case "left hand":
 		case "lefthand":
 			try {
-				if(player.getLeftHandType() == ItemType.ONEHANDEDWEAPON) {
-					dropItem = (OneHandedWeapon) player.getLeftHand();
-					player.drop(Equip.LEFTHAND);
-					outputLog.printToLog(player.titleToString() + " has dropped their left hand. ");
-				}
-				else if(player.getLeftHandType() == ItemType.SHIELD) {
-					dropItem = (Shield) player.getLeftHand();
-					player.drop(Equip.LEFTHAND);
-					outputLog.printToLog(player.titleToString() + " has dropped their left hand. ");
-				}
-				else if(player.getLeftHandType() == ItemType.MAGICAL) {
-					dropItem = (Magical) player.getLeftHand();
-					player.drop(Equip.LEFTHAND);
-					outputLog.printToLog(player.titleToString() + " has dropped their left hand. ");
-				}
-				else {
-					outputLog.printToLog(dropItem.titleToString() + " is the incorrect type. ");
-				}
-			} catch (EquipmentException ee) {
-				outputLog.printToLog(ee.getMessage());
+				dropItem = player.getLeftHand();
+				player.drop(Equip.LEFTHAND);
+				outputLog.printToLog(player.titleToString() + " has dropped their left hand. ");
+			} catch (EquipmentException EE) {
+				outputLog.printToLog(EE.getMessage());
 			}
 			break;
 		case "right hand":
 		case "righthand":
 			try {
-				if(player.getRightHandType() == ItemType.ONEHANDEDWEAPON) {
-					dropItem = (OneHandedWeapon) player.getRightHand();
-					player.drop(Equip.RIGHTHAND);
-					outputLog.printToLog(player.titleToString() + " has dropped their right hand. ");
-				}
-				else if(player.getRightHandType() == ItemType.SHIELD) {
-					dropItem = (Shield) player.getRightHand();
-					player.drop(Equip.RIGHTHAND);
-					outputLog.printToLog(player.titleToString() + " has dropped their right hand. ");
-				}
-				else if(player.getRightHandType() == ItemType.MAGICAL) {
-					dropItem = (Magical) player.getRightHand();
-					player.drop(Equip.RIGHTHAND);
-					outputLog.printToLog(player.titleToString() + " has dropped their right hand. ");
-				}
-				else {
-					outputLog.printToLog(dropItem.titleToString() + " is the incorrect type. ");
-				}
-			} catch (EquipmentException ee) {
-				outputLog.printToLog(ee.getMessage());
+				dropItem = player.getRightHand();
+				player.drop(Equip.RIGHTHAND);
+				outputLog.printToLog(player.titleToString() + " has dropped their right hand. ");
+			} catch (EquipmentException EE) {
+				outputLog.printToLog(EE.getMessage());
 			}
 			break;
 		case "hands":
 			try {
-				if(player.getHandsType() == ItemType.TWOHANDEDWEAPON) {
-					dropItem = (TwoHandedWeapon) player.getHands();
-					player.drop(Equip.HANDS);
-					outputLog.printToLog(player.titleToString() + " has dropped both hands. ");
-				}
-				else {
-					outputLog.printToLog(dropItem.titleToString() + " is the incorrect type. ");
-				}
+				dropItem = (TwoHandedWeapon) player.getTwoHands();
+				player.drop(Equip.HANDS);
+				outputLog.printToLog(player.titleToString() + " has dropped both hands. ");
 			}
 			catch (EquipmentException ee) {
 				outputLog.printToLog(ee.getMessage() + "\n");
@@ -129,14 +66,9 @@ public class DropCommand extends CommandHandler {
 			break;
 		case "suit":
 			try {
-				if(player.getSuitType() == ItemType.SUIT) {
-					dropItem = (Suit) player.getSuit();
-					player.drop(Equip.SUIT);
-					outputLog.printToLog(player.titleToString() + " has dropped their suit. ");
-				}
-				else {
-					outputLog.printToLog(dropItem.titleToString() + " is the incorrect type. ");
-				}
+				dropItem = (Suit) player.getSuitArea();
+				player.drop(Equip.SUIT);
+				outputLog.printToLog(player.titleToString() + " has dropped their suit. ");
 			}
 			catch (EquipmentException ee) {
 				outputLog.printToLog(ee.getMessage() + "\n");
@@ -175,8 +107,8 @@ public class DropCommand extends CommandHandler {
 								outputLog.printToLog(dropItem.titleToString() + " is the incorrect type. ");
 							}
 						}
-						catch (InventoryException ie) {
-							outputLog.printToLog(ie.getMessage());
+						catch (InventoryException IE) {
+							outputLog.printToLog(IE.getMessage());
 						}
 					}
 					i++;
@@ -190,8 +122,9 @@ public class DropCommand extends CommandHandler {
 			}
 		}
 		if(player.isDropSuccess()) {
-			currRoom.addItem(dropItem);
+			this.room.addItem(dropItem);
 		}
-		outputLog.printToLog("This room now contains the following items:\n" + this.currRoom.examineItems());
+	
+	outputLog.printToLog("This room now contains the following items:\n" + this.room.examineItems());
 	}
 }

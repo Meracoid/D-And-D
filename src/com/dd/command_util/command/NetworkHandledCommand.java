@@ -7,12 +7,11 @@ import com.dd.network.NetworkCommChannel;
 import com.dd.network.NetworkCommInterpreter;
 
 public class NetworkHandledCommand extends CommandHandler{
-    private GameState gameState;
     private NetworkCommChannel channel;
     private NetworkCommInterpreter interpreter;
 
     public NetworkHandledCommand(NetworkCommChannel channel, NetworkCommInterpreter interpreter, GameState gameState){
-        this.gameState = gameState;
+        super(gameState);
         this.channel = channel;
         this.interpreter = interpreter;
     }

@@ -2,10 +2,9 @@ package com.dd.command_util;
 
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
-import com.dd.command_util.CommandHandler.InvalidArgumentException;
 import com.dd.controller_util.controller.RunningGameController;
 import com.dd.entities.*;
-import com.dd.entities.Player.InventoryException;
+import com.dd.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,15 +165,4 @@ public class CommandParser {
     public void setOutputLog(CommandOutputLog outputLog){
         this.outputLog = outputLog;
     }
-
-    public class InvalidCommandException extends Exception {
-    	public InvalidCommandException(String message){
-    		super(message);
-		}
-    	
-    	@Override
-		public String toString() {
-			return super.toString().substring(59);
-		}
-	}
 }

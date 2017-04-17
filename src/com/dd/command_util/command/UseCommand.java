@@ -3,33 +3,35 @@ package com.dd.command_util.command;
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
-import com.dd.command_util.CommandHandler.InvalidArgumentException;
+import com.dd.entities.Fighter;
 import com.dd.entities.Player;
-import com.dd.entities.Player.InventoryException;
+import com.dd.entities.PlayerType;
+import com.dd.entities.Wizard;
+import com.dd.exceptions.*;
 import com.dd.items.Item;
 import com.dd.items.Potion;
-import com.dd.levels.DungeonMap;
-import com.dd.levels.Room;
-import com.dd.levels.Room.UnknownItemException;
 
 public class UseCommand extends CommandHandler {
-	
-	private Player player;
-	private DungeonMap dungeonMap;
-	private Room room;
     
 	public UseCommand(GameState gameState) {
-		this.player = gameState.getActivePlayer();
-		this.dungeonMap = gameState.getMap();
-		this.room = dungeonMap.getRoom(player.getPostion());
+		super(gameState);
     }
 
     @Override
     public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException {
-    	this.room = dungeonMap.getRoom(player.getPostion());
     	if(args[0] == null) {
-    		throw new InvalidArgumentException("Choose something to pickup. "
+    		throw new InvalidArgumentException("Choose something to " + commandName + ". "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
+    	}
+		Player player = updateState();
+		if(playerType == PlayerType.FIGHTER) {
+    		player = (Fighter) player;
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		player = (Wizard) player; 
+    	}
+    	else {
+    		throw new NoPlayerClassException("No player class in CommandHandler. ");
     	}
     	Item item = null;
     	if(player.getInventory().containsKey(args[0])) {
