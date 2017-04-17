@@ -2,7 +2,6 @@ package com.dd.entities.monsters;
 
 import com.dd.entities.Entity;
 import com.dd.entities.Monster;
-import com.dd.entities.Player;
 
 import java.util.Random;
 
@@ -14,7 +13,6 @@ public class Skeleton extends Monster {
 
     @Override
     public void die() {
-    	clearText();
         Random random = new Random();
         if(random.nextInt(5) + 1 == 5
                 || this.stats.getAttack() == 1
@@ -22,27 +20,28 @@ public class Skeleton extends Monster {
             this.stats.setHealth(1);
             this.stats.setAttack(this.stats.getAttack() - 1);
             this.stats.setDefense(this.stats.getDefense() - 1);
-            text = "As you deal a deadly blow, the skeleton hastily tries to keep itself together, losing some pieces in the process. ";
+            text += "As you deal a deadly blow, the skeleton hastily tries to keep itself together, losing some pieces in the process. ";
         }
         else {
             super.die();
-            text = "The skeleton falls into a pile of ash at your feet. ";
+            text += "The skeleton falls into a pile of ash at your feet. ";
         }
     }
 
     @Override
     public void attack(Entity entity) {
-    	clearText();
         entity.takeDamage(stats.getAttack());
-        text = "The skeleton throws itself at you. "
+        text += "The skeleton throws itself at you. "
         		+ titleToString() + " deals " + stats.getAttack() + " damage to " + entity.titleToString() + ". ";
     }
     
     @Override
-    public void takeDamage(int damage) {
-        stats.setHealth(stats.getHealth() - damage);
+    public int takeDamage(int damage) {
+    	int damageDealt = stats.getHealth() - damage;
+        stats.setHealth(damageDealt);
         if(!survives()){
         }
+        return damageDealt;
     }
 
     @Override

@@ -34,23 +34,20 @@ public abstract class Entity {
 	}
 	
 	public void attack(Entity entity) {
-		clearText();
-        entity.takeDamage(attackDamage());
-        text += titleToString() + " deals " + attackDamage() + " damage to " + entity.titleToString() + ". ";
+        int damage = entity.takeDamage(attackDamage());
+        text += titleToString() + " deals " + damage + " damage to " + entity.titleToString() + ". ";
     }
 	
-	public void takeDamage(int damage){
-        int newDamage;
-        if(damage - stats.getDefense() <= 0){
-            newDamage = 1;
+	public int takeDamage(int damage){
+        int damageDealt = damage - stats.getDefense();
+        if(damageDealt <= 0){
+        	damageDealt = 1;
         }
-        else {
-            newDamage = damage - stats.getDefense();
-        }
-		stats.setHealth(stats.getHealth() - newDamage);
+		stats.setHealth(stats.getHealth() - damageDealt);
 		if(!survives()){
-			text += "You just killed" + titleToString() +"! ";
+			text += titleToString() +" just died! ";
 		}
+		return damageDealt;
 	}
 	
 	public boolean survives() {

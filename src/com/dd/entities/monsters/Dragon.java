@@ -41,17 +41,18 @@ public class Dragon extends Monster {
     }
 
     @Override
-    public void takeDamage(int damage) {
-    	clearText();
-        stats.setHealth(stats.getHealth() - damage);
+    public int takeDamage(int damage) {
+    	int newDamage = stats.getHealth() - damage;
+        stats.setHealth(newDamage);
         if(!survives()){
             text += "You take your sword and ask for a blessing from any god that will hear. You leap up and" +
                     " with a solid heave take " + titleToString() + "! The battle is won! ";
         }
+        return newDamage;
     }
+    
     @Override
     public void attack(Entity entity) {
-    	clearText();
         Random random = new Random();
         if(breathAttack){
             text += titleToString() + "breathes at you with a fiery breath. It's lungs look as if they collapse a bit. ";
