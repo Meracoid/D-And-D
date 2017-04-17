@@ -5,7 +5,6 @@ import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
 import com.dd.entities.*;
 import com.dd.exceptions.*;
-import com.dd.entities.equipments.*;
 import com.dd.items.*;
 
 public class DropCommand extends CommandHandler {
