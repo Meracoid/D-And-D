@@ -78,28 +78,28 @@ public class DropCommand extends CommandHandler {
 			if(args[1].equals("inventory")) {
 				int inventoryNum = Integer.parseInt(args[2]);
 				int i = 1;
-				for(String inventoryName : player.getInventory().keySet()) {
+				for(Item item : player.getInventory().getInventoryMap().values()) {
 					if(i == inventoryNum) {
 						try {
-							dropItem = player.getInventory().get(inventoryName);
+							dropItem = item;
 							if(dropItem instanceof Artifact) {
 								dropItem = (Artifact) dropItem;
 								//player.discardfromInventory(inventoryName);
-								player.discardfromInventory(dropItem);
+								player.removeFromInventory(dropItem);
 								outputLog.printToLog(player.titleToString() + " has dropped " + dropItem.titleToString() + " "
 										+ "from their inventory. ");
 							}
 							else if(dropItem instanceof Potion) {
 								dropItem = (Potion) dropItem;
 								//player.discardfromInventory(inventoryName);
-								player.discardfromInventory(dropItem);
+								player.removeFromInventory(dropItem);
 								outputLog.printToLog(player.titleToString() + " has dropped " + dropItem.titleToString() + " "
 										+ "from their inventory. ");
 							}
 							else if(dropItem instanceof Magical) {
 								dropItem = (Magical) dropItem;
 								//player.discardfromInventory(inventoryName);
-								player.discardfromInventory(dropItem);
+								player.removeFromInventory(dropItem);
 								outputLog.printToLog(player.titleToString() + " has dropped " + dropItem.titleToString() + " "
 										+ "from their inventory. ");
 							}

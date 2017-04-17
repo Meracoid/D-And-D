@@ -58,14 +58,14 @@ public class ExamineCommand extends CommandHandler {
 						+ "\nAttack/Defense: " + monster.getStats().getAttack() + "/" + monster.getStats().getDefense()
 						+ monster.examineText());
 			}
-			try{
+			try{			
 				Item item = room.getItem(args[0]);
 				outputLog.printToLog(item.titleToString() + " "
 						+ item.examineToString() + "\n");
 				break;
 			}
 			catch(UnknownItemException UIE) {
-				outputLog.printToLog(UIE.toString());
+				outputLog.printToLog(UIE.getMessage());
     			return;
 			}
     	}

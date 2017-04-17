@@ -37,9 +37,9 @@ public class MoveCommand extends CommandHandler {
     	switch(args[0].toLowerCase()) {
     	case "north": 
 			if(dungeonMap.isRoomInDir(position, Direction.NORTH)){
-					position.moveNorth();
-					outputLog.printToLog("The " + player.titleToString() + " has moved through the North door. ");
-					outputLog.printToLog(dungeonMap.getRoom(player.getPostion()).enterRoomText());
+				position.moveNorth();
+				outputLog.printToLog("The " + player.titleToString() + " has moved through the North door. ");
+				outputLog.printToLog(dungeonMap.getRoom(player.getPostion()).enterRoomText());
 			}
 			else{
 				outputLog.printToLog("No North Door! ");

@@ -36,10 +36,10 @@ public class PickupCommand extends CommandHandler {
 		switch(args[0]) {
 		case "items":
 			ArrayList<String> equippedItemNames = new ArrayList<String>();;
-			for(String itemName : room.getItemList().keySet()) {
+			for(Item equippedItem : room.getItemList().values()) {
 				player.resetPickupSuccess();
 				try {
-					item = room.getItem(itemName);
+					item = room.getItem(equippedItem);
 				}
 				catch(UnknownItemException UIE) {
 					outputLog.printToLog(UIE.getMessage());
@@ -78,7 +78,7 @@ public class PickupCommand extends CommandHandler {
 								+ "because it has not item type. ");
 					}
 	    			if(player.isPickupSuccess()) {
-	    				equippedItemNames.add(itemName);
+	    				equippedItemNames.add(equippedItem.getName());
 	    			}
 	    		}
 	    		catch(EquipmentException | InventoryException E) {

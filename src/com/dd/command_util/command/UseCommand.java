@@ -34,8 +34,8 @@ public class UseCommand extends CommandHandler {
     		throw new NoPlayerClassException("No player class in CommandHandler. ");
     	}
     	Item item = null;
-    	if(player.getInventory().containsKey(args[0])) {
-    		item = player.getInventory().get(args[0]);
+    	if(player.getInventory().getInventoryMap().containsKey(args[0])) {
+    		item = player.getInventory().getInventoryMap().get(args[0]);
     	}
     	else {
     		if(room.getItemList().containsKey(args[0])) {
@@ -49,10 +49,10 @@ public class UseCommand extends CommandHandler {
     	}
     	if(item instanceof Potion) {
 			try {
-				player.usePotionFromInventory(item.getName());
+				player.usePotionFromInventory((Potion) item);
 				outputLog.printToLog(player.titleToString() + " has used " + item.titleToString() + ". ");
-			} catch (InventoryException IE) {
-				outputLog.printToLog(IE.getMessage());
+			} catch (EquipmentException EE) {
+				outputLog.printToLog(EE.getMessage());
 			}
     	}
     	else {
