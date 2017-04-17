@@ -24,7 +24,7 @@ public class CommandParser {
         this.outputLog = outputLog;
         if(game.getActivePlayer() instanceof Fighter) {
         	fighter = (Fighter) game.getActivePlayer();
-        	playerType = playerType.FIGHTER;
+        	playerType = PlayerType.FIGHTER;
         }
         else if(game.getActivePlayer() instanceof Wizard) {
         	wizard = (Wizard) game.getActivePlayer();
@@ -108,7 +108,7 @@ public class CommandParser {
     		handler.handleCommand(command, args, outputLog);
     	}
     	catch (InvalidArgumentException | InventoryException E) {    		
-    		outputLog.printToLog(E.toString());
+    		outputLog.printToLog(E.getMessage());
     	}
     }
     
