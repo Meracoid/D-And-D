@@ -3,29 +3,20 @@ package com.dd.entities;
 import com.dd.Stats;
 import com.dd.items.*;
 import com.dd.levels.MapPosition;
-import com.dd.dd_util.ConflictHandlingMap;
 import com.dd.entities.equipments.*;
 import com.dd.exceptions.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class Player extends Entity {
 
 	protected MapPosition mapPosition;
 
-	public Hand leftHand;
-	public Hand rightHand;
-	public TwoHands twoHands;
-	public SuitArea suitArea;
-	
+	protected Hand leftHand;
+	protected Hand rightHand;
+	protected TwoHands twoHands;
+	protected SuitArea suitArea;
+	protected Inventory inventory;
 	protected boolean pickupSuccess;
 	protected boolean dropSuccess;
-
-	private Map<String, Item> inventory = new ConflictHandlingMap<Item>();
-	private int inventoryUsed = 0;
-	private int maxInventorySize = 10;
 
 	public Player(String name, MapPosition pos, Stats stats) {
 		super(name, stats);
@@ -50,6 +41,7 @@ public class Player extends Entity {
 		this.rightHand  = new Hand();
 		this.twoHands = new TwoHands();
 		this.suitArea = new SuitArea();
+		this.inventory = new Inventory(10);
 	}
 	
 	public void pickup(Item item) throws InventoryException, EquipmentException {
@@ -150,101 +142,61 @@ public class Player extends Entity {
 		}
 	}
 	
-	public void usePotion(Item item) {
-		if(item instanceof Potion){
-			stats.changeStat(item.getStatChange());
-		}
-		else{
-			System.out.println("ERROR item is not a potion. ");
+	public void usePotion(Potion potion) throws EquipmentException {
+		try {
+			inventory.remove(potion);
+			changeStats(potion.getStatChange());
+		} 
+		catch (InventoryException IE) {
+			throw new EquipmentException(IE.getMessage());
 		}
 	}
 
-	public void usePotionFromInventory(String potionName) throws InventoryException {
-		Item potion = inventory.get(potionName);
-		if(potion == null){
-			throw new InventoryException("There are no potion of \""
-					+ potionName
-					+ "\" in the inventory of player \""
-					+ name
-					+ "\". Item removal failed. ");
+	public void usePotionFromInventory(Potion potion) throws EquipmentException {
+		try {
+			inventory.get(potion);
+			usePotion(potion);
+			dropSuccess = false;
+		} 
+		catch (InventoryException IE) {
+			throw new EquipmentException(IE.getMessage());
 		}
-		if(!(potion instanceof Potion)) {
-			throw new InventoryException("The item \""
-											+ potionName
-											+ "\" in the inventory of player \""
-											+ "\" is not a potion. Item not used. ");
-		}
-		stats.changeStat(potion.getStatChange());
-		inventory.remove(potionName);
+		
 	}
-
+	
 	public void addtoInventory(Item item) throws InventoryException {
-		if(inventoryUsed == maxInventorySize){
-			throw new InventoryException("The inventory of " + titleToString()
-											+ " is already full. Item not added to inventory. ");
+		if(item instanceof Potion) {
+			this.inventory.add((Potion) item);
 		}
-		inventory.put(item.getName(), item);
-		++inventoryUsed;
+		else if(item instanceof Artifact) {
+			this.inventory.add((Artifact) item);
+		}
+		else if(item instanceof Magical) {
+			this.inventory.add((Magical) item);
+		}
+		else {
+			throw new InventoryException(item.titleToString() + " cannot be added to your inventory. "
+					+ "The item must be a potion, artifact, or magical item. ");
+		}
 	}
 
-	public void removefromInventory(String itemName) throws InventoryException {
-		if(inventory.get(itemName) == null) {
-			throw new InventoryException("There are no items of \""
-											+ itemName
-											+ "\" in the inventory of player \""
-											+ name
-											+ "\". Item removal failed. ");
+	public void removeFromInventory(Item item) throws InventoryException {
+		if(item instanceof Potion) {
+			this.inventory.remove((Potion) item);
 		}
-		inventory.remove(itemName);
-	}
-
-	public void discardfromInventory(String itemName) throws InventoryException {
-		if(inventory.remove(itemName) == null) {
-			throw new InventoryException("\"" + itemName + "\" "
-					+ "is not in the inventory of "
-					+ titleToString()
-					+ ". Item not dropped. ");
+		else if(item instanceof Artifact) {
+			this.inventory.remove((Artifact) item);
 		}
-	}
-	
-	public void discardfromInventory(Item item) throws InventoryException {
-		if(!inventory.containsValue(item)){
-			throw new InventoryException("Item is not in the inventory of "
-					+ titleToString()
-					+ ". Item not dropped. ");
+		else if(item instanceof Magical) {
+			this.inventory.remove((Magical) item);
 		}
-		inventory.remove(item);
-	}
-
-	public List<Item> removeAllEquipment() throws EquipmentException {
-		List<Item> itemList = new ArrayList<Item>();
-		if(leftHand.isEmpty() || rightHand.isEmpty()) {
-			if(leftHand.getHand().equals(rightHand.getHand())) {
-				itemList.add(leftHand.getHand());
-			}
-			else {
-				if(leftHand.isEmpty()) {
-					itemList.add(leftHand.getHand());
-				}
-				if(rightHand.isEmpty()) {
-					itemList.add(rightHand.getHand());
-				}
-			}
+		else {
+			throw new InventoryException(item.titleToString() + " cannot be added to your inventory. "
+					+ "The item must be a potion, artifact, or magical item. ");
 		}
-		if(suitArea.isEmpty()) {
-			itemList.add(suitArea.getSuitArea());
-		}
-		twoHands.dropTwoHands();
-		suitArea.dropSuitArea();
-		return itemList;
+		dropSuccess = true;
+		
 	}
-
-	public void discardAllEquipment() {
-		twoHands.dropTwoHands();
-		suitArea.dropSuitArea();
-	}
-	
-	
 	
 	public MapPosition getPostion() {
 		return mapPosition;
@@ -286,7 +238,7 @@ public class Player extends Entity {
 		this.suitArea = suitArea;
 	}
 	
-	public Map<String, Item> getInventory() {
+	public Inventory getInventory() {
 		return inventory;
 	}
 	
@@ -330,9 +282,9 @@ public class Player extends Entity {
 	public String inventoryToString() {
 		StringBuilder sb = new StringBuilder("Inventory:\n");
 		int i = 0;
-		for(String itemName : inventory.keySet()){
-			sb.append("\t" + ++i + " " + itemName + " " + inventory.get(itemName).examineToString() + "\n");
-		}	
+		for(Item item : inventory.getInventoryMap().values()){
+			sb.append("\t" + ++i + " " + item.getName() + " " + item.examineToString() + "\n");
+		}
 		return sb.toString();
 	}
 	

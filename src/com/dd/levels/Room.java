@@ -120,4 +120,11 @@ public class Room {
 		}
 		return itemMap.get(name);
 	}
+	
+	public Item getItem(Item item) throws UnknownItemException {
+		if(!itemMap.containsValue(item)) {
+			throw new UnknownItemException(item.titleToString() + " is not found in this room. ");
+		}
+		return itemMap.get(item.getName());
+	}
 }
