@@ -8,18 +8,23 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dd.controller_util.controller.AddServerController">
    <children>
-      <TextField layoutX="342.0" layoutY="54.0" />
-      <Label layoutX="121.0" layoutY="53.0" prefHeight="25.0" prefWidth="120.0" text="Sever Name:">
+      <TextField fx:id="serverNameField" layoutX="342.0" layoutY="54.0" />
+      <Label fx:id="serverName" layoutX="121.0" layoutY="53.0" prefHeight="25.0" prefWidth="120.0" text="Sever Name:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField layoutX="342.0" layoutY="96.0" />
-      <Label layoutX="121.0" layoutY="95.0" prefHeight="25.0" prefWidth="120.0" text="IP Address:">
+      <TextField fx:id="ipAddressField" layoutX="342.0" layoutY="96.0" />
+      <Label fx:id="ipAddress" layoutX="121.0" layoutY="95.0" prefHeight="25.0" prefWidth="120.0" text="IP Address:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="427.0" layoutY="325.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="79.0" text="ADD" />
+      <Button fx:id="addButton" layoutX="427.0" layoutY="325.0" mnemonicParsing="false" onAction="#addButtonAction" prefHeight="40.0" prefWidth="79.0" text="ADD" />
+      <Label fx:id="errorLabel" layoutX="204.0" layoutY="245.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
