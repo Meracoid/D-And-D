@@ -128,7 +128,19 @@ public class DropCommand extends CommandHandler {
 				outputLog.printToLog(UIE.getMessage());
 			}
 		}
-	
 	outputLog.printToLog("This room now contains the following items:\n" + this.room.examineItems());
+	if(room.hasMonster()) {
+		Monster monster = room.getMonster();
+		room.getMonsterList().values().forEach((v) -> outputLog.printToLog(
+				v.titleToString()
+				+ "\nHealth: " + v.getStats().getHealth()
+				+ "\nAttack/Defense: " + v.getStats().getAttack() + "/" + v.getStats().getDefense()
+				+ "\n" + v.examineText()));
+		monster.attack(player);
+		outputLog.printToLog(player.getText());
+	}
+	else {
+		outputLog.printToLog("There are no monsters in this room. ");
+	}
 	}
 }

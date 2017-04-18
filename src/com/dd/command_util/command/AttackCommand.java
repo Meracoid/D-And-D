@@ -39,8 +39,16 @@ public class AttackCommand extends CommandHandler {
 			outputLog.printToLog(UME.getMessage());
 		}
 		if(room.hasMonster()) {
+			room.getMonsterList().values().forEach((v) -> outputLog.printToLog(
+					v.titleToString()
+					+ "\nHealth: " + v.getStats().getHealth()
+					+ "\nAttack/Defense: " + v.getStats().getAttack() + "/" + v.getStats().getDefense()
+					+ "\n" + v.examineText()));
 			monster.attack(player);
 			outputLog.printToLog(player.getText());
+		}
+		else {
+			outputLog.printToLog("There are no monsters in this room. ");
 		}
     }
 }

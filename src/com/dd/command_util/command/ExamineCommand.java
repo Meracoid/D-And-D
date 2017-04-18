@@ -3,7 +3,11 @@ package com.dd.command_util.command;
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
+import com.dd.entities.Fighter;
 import com.dd.entities.Monster;
+import com.dd.entities.Player;
+import com.dd.entities.PlayerType;
+import com.dd.entities.Wizard;
 import com.dd.exceptions.*;
 import com.dd.items.Item;
 
@@ -19,7 +23,16 @@ public class ExamineCommand extends CommandHandler {
     		throw new InvalidArgumentException("Choose something to " + commandName + ". "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
     	}
-		updateState();
+    	Player player = updateState();
+		if(playerType == PlayerType.FIGHTER) {
+    		player = (Fighter) player;
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		player = (Wizard) player; 
+    	}
+    	else {
+    		throw new NoPlayerClassException("No player class in CommandHandler. ");
+    	}
     	switch(args[0].toLowerCase()) {
     	case "room":
 			outputLog.printToLog(room.enterRoomText());
@@ -69,5 +82,18 @@ public class ExamineCommand extends CommandHandler {
     			return;
 			}
     	}
+    	if(room.hasMonster()) {
+    		Monster monster = room.getMonster();
+			room.getMonsterList().values().forEach((v) -> outputLog.printToLog(
+					v.titleToString()
+					+ "\nHealth: " + v.getStats().getHealth()
+					+ "\nAttack/Defense: " + v.getStats().getAttack() + "/" + v.getStats().getDefense()
+					+ "\n" + v.examineText()));
+			monster.attack(player);
+			outputLog.printToLog(player.getText());
+		}
+		else {
+			outputLog.printToLog("There are no monsters in this room. ");
+		}
 	}
 }

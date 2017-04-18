@@ -4,6 +4,7 @@ import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
 import com.dd.entities.Fighter;
+import com.dd.entities.Monster;
 import com.dd.entities.Player;
 import com.dd.entities.PlayerType;
 import com.dd.entities.Wizard;
@@ -59,5 +60,18 @@ public class UseCommand extends CommandHandler {
     		outputLog.printToLog(item.titleToString() + " is not a Potion. ");
     		return;
     	}
+    	if(room.hasMonster()) {
+    		Monster monster = room.getMonster();
+			room.getMonsterList().values().forEach((v) -> outputLog.printToLog(
+					v.titleToString()
+					+ "\nHealth: " + v.getStats().getHealth()
+					+ "\nAttack/Defense: " + v.getStats().getAttack() + "/" + v.getStats().getDefense()
+					+ "\n" + v.examineText()));
+			monster.attack(player);
+			outputLog.printToLog(player.getText());
+		}
+		else {
+			outputLog.printToLog("There are no monsters in this room. ");
+		}
     }
 }
