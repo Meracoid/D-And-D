@@ -6,6 +6,10 @@ import com.dd.controller_util.GameSceneController;
 import java.io.IOException;
 
 import com.dd.DandD;
+import com.dd.SceneControllerTuple;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +37,7 @@ public class JoinGameController extends GameSceneController{
 	@FXML
 	private void nextButtonJoinAction(ActionEvent event) throws IOException{
 		if(listItemIsClicked()){
-			//Implement joining game
+			DandD.setActiveGameScene("CharacterCreationScene", null);
 		}
 	}
 	@FXML
@@ -45,20 +49,26 @@ public class JoinGameController extends GameSceneController{
 		DandD.setActiveGameScene("MainMenuScene", null);
 	}
 	private boolean listItemIsClicked(){
-		if(netGameList.equals("")){
+		if(netGameList.getItems().isEmpty()){
 			errorLable.setText("No net games at this point. Please try again later.");
+			return false;
 		}
 		else if(!netGameList.isPressed()){
 			errorLable.setText("Please select a net game to join.");
+			return false;
 		}
 		return true;
 	}
-	public void addNetGames(){
-		
+	public void addNetGames(String gameName, String ipAddress){
+		ObservableList<String> items =FXCollections.observableArrayList (
+			    "Game Name: "+gameName+"\nIP Address: "+ipAddress);
+		netGameList.setItems(items);
 	}
     @Override
     public void setup(ControllerArgumentPackage args){
-
+    	String gameName= args.getArgument("ServerName");
+    	String ipAddress= args.getArgument("IPAddress");
+    	addNetGames(gameName,ipAddress);
     }
 
     @Override
