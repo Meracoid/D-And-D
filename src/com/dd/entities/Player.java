@@ -1,9 +1,9 @@
 package com.dd.entities;
 
 import com.dd.Stats;
+import com.dd.entities.adt.*;
 import com.dd.items.*;
 import com.dd.levels.MapPosition;
-import com.dd.entities.equipments.*;
 import com.dd.exceptions.*;
 
 public class Player extends Entity {

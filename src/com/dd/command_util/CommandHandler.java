@@ -2,7 +2,7 @@ package com.dd.command_util;
 
 import com.dd.GameState;
 import com.dd.entities.*;
-import com.dd.entities.equipments.ItemType;
+import com.dd.entities.adt.ItemType;
 import com.dd.exceptions.InvalidArgumentException;
 import com.dd.exceptions.InventoryException;
 import com.dd.exceptions.NoPlayerClassException;

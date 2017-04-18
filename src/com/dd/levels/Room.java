@@ -1,7 +1,7 @@
 package com.dd.levels;
 
 import com.dd.entities.Monster;
-import com.dd.entities.equipments.ItemList;
+import com.dd.entities.adt.ItemList;
 import com.dd.exceptions.*;
 import com.dd.items.*;
 import com.dd.dd_util.ConflictHandlingMap;

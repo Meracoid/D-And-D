@@ -1,4 +1,4 @@
-package com.dd.entities.equipments;
+package com.dd.entities.adt;
 
 import com.dd.exceptions.ItemTypeException;
 import com.dd.items.*;

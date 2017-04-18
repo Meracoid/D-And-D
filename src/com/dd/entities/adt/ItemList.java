@@ -1,4 +1,4 @@
-package com.dd.entities.equipments;
+package com.dd.entities.adt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
