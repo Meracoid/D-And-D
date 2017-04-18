@@ -50,15 +50,15 @@ public class ExamineCommand extends CommandHandler {
 			break;
 		
 		default:
-			if(room.getMonster(args[0]) != null) {
-				Monster monster = room.getMonster(args[0]);
-				outputLog.printToLog(
-						monster.titleToString() +". "
-						+ "\nHealth: " + monster.getStats().getHealth()
-						+ "\nAttack/Defense: " + monster.getStats().getAttack() + "/" + monster.getStats().getDefense()
-						+ monster.examineText());
-			}
-			try{			
+//			if(room.getMonster(args[0]) != null) {
+//				Monster monster = room.getMonster(args[0]);
+//				outputLog.printToLog(
+//						monster.titleToString() +". "
+//						+ "\nHealth: " + monster.getStats().getHealth()
+//						+ "\nAttack/Defense: " + monster.getStats().getAttack() + "/" + monster.getStats().getDefense()
+//						+ monster.examineText());
+//			}
+			try{
 				Item item = room.getItem(args[0]);
 				outputLog.printToLog(item.titleToString() + " "
 						+ item.examineToString() + "\n");

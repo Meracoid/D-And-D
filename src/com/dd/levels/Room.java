@@ -2,6 +2,12 @@ package com.dd.levels;
 
 import com.dd.entities.Monster;
 import com.dd.entities.adt.ItemList;
+import com.dd.entities.adt.MonsterList;
+import com.dd.entities.monsters.Beholder;
+import com.dd.entities.monsters.Dragon;
+import com.dd.entities.monsters.Goblin;
+import com.dd.entities.monsters.Skeleton;
+import com.dd.entities.monsters.Zombie;
 import com.dd.exceptions.*;
 import com.dd.items.*;
 import com.dd.dd_util.ConflictHandlingMap;
@@ -10,13 +16,15 @@ import java.util.Map;
 public class Room {
 	
 	private ItemList itemList;
+	private MonsterList monsterList;
 	//private Map<String, Item> itemMap;
-	private Map<String, Monster> monsterMap;
+	//private Map<String, Monster> monsterMap;
 	
 	public Room() {
 		itemList = new ItemList();
+		monsterList = new MonsterList();
 		//itemMap = new ConflictHandlingMap<Item>();
-		monsterMap = new ConflictHandlingMap<Monster>();
+		//monsterMap = new ConflictHandlingMap<Monster>();
 	}
 	
 	public String examineItems() {
@@ -155,43 +163,69 @@ public class Room {
 	}
 
 	public void addMonster(Monster monster) {
-		monsterMap.put(monster.getName(),monster);
+		monsterList.add(monster);
+		//monsterMap.put(monster.getName(),monster);
+	}
+	
+	public void removeMonster(Monster monster) throws UnknownMonsterException {
+		if(monster instanceof Beholder) {
+			monsterList.remove((Beholder) monster);
+		}
+		else if(monster instanceof Dragon) {
+			monsterList.remove((Dragon) monster);
+		}
+		else if(monster instanceof Goblin) {
+			monsterList.remove((Goblin) monster);
+		}
+		else if(monster instanceof Skeleton) {
+			monsterList.remove((Skeleton) monster);
+		}
+		else if(monster instanceof Zombie) {
+			monsterList.remove((Zombie) monster);
+		}
+		else {
+			throw new UnknownMonsterException(monster.getName() + " is of unknown type. ");
+		}
 	}
 
-	public Monster removeMonster(String monsterName) throws UnknownMonsterException {
-		Monster retMonster;
-		if(!monsterMap.containsKey(monsterName)){
-			throw new UnknownMonsterException("The monster \""
-												+ monsterName
-												+ "\" does not exist in this room. Removal failed. ");
-		}
-		retMonster = monsterMap.get(monsterName);
-		monsterMap.remove(monsterName);
-		return retMonster;
-	}
-
-	public void discardMonster(String monsterName) throws UnknownMonsterException {
-		if(monsterMap.remove(monsterName) != null) {
-			throw new UnknownMonsterException("The monster \""
-												+ monsterName
-												+ "\" does not exist in this room. Removal failed. ");
-		}
-	}
+//	public Monster removeMonster(String monsterName) throws UnknownMonsterException {
+//		Monster retMonster;
+//		if(!monsterMap.containsKey(monsterName)){
+//			throw new UnknownMonsterException("The monster \""
+//												+ monsterName
+//												+ "\" does not exist in this room. Removal failed. ");
+//		}
+//		retMonster = monsterMap.get(monsterName);
+//		monsterMap.remove(monsterName);
+//		return retMonster;
+//	}
+//
+//	public void discardMonster(String monsterName) throws UnknownMonsterException {
+//		if(monsterMap.remove(monsterName) != null) {
+//			throw new UnknownMonsterException("The monster \""
+//												+ monsterName
+//												+ "\" does not exist in this room. Removal failed. ");
+//		}
+//	}
 
 	public Map<String, Item> getItemMap() {
 		return this.itemList.getItemMap();
 	}
 
 	public Map<String, Monster> getMonsterList() {
-		return monsterMap;
+		return this.monsterList.getMonsterMap();
 	}
 	
-	public Monster getMonster(String name) throws UnknownMonsterException {
-		if(!monsterMap.containsKey(name)){
-			throw new UnknownMonsterException(name + " is not in this room. ");
-		}
-		return monsterMap.get(name);
+	public Monster getMonster() {
+		return monsterList.getOne();
 	}
+	
+//	public Monster getMonster(String name) throws UnknownMonsterException {
+//		if(!monsterMap.containsKey(name)){
+//			throw new UnknownMonsterException(name + " is not in this room. ");
+//		}
+//		return monsterMap.get(name);
+//	}
 	
 	public Item getItem(String name) throws UnknownItemException {
 		if(!itemList.getItemMap().containsKey(name)) {
