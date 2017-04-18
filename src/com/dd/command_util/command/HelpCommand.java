@@ -1,18 +1,22 @@
 package com.dd.command_util.command;
 
+import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
 import com.dd.controller_util.controller.RunningGameController;
+import com.dd.exceptions.InvalidArgumentException;
 
 public class HelpCommand extends CommandHandler {
-    public HelpCommand() {}
+	
+	public HelpCommand(GameState gameState) {
+    	super(gameState);
+	}
 	
 	@Override
 	public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException{
     	if(args[0] != null){
 			throw new InvalidArgumentException("The " + commandName + " command should not be followed by any arguments. ");
 		}
-
 		outputLog.printToLog(RunningGameController.printLnTitle('~', "AVAILABLE COMMANDS", 72)
 				+ "\"attack <name>\"\n"
 				+ "Initiate an attack against a monster or player.\n"
@@ -34,8 +38,9 @@ public class HelpCommand extends CommandHandler {
 				+ "pickup an item with the name and attempt to equip it to the player or add it to "
 				+ "their inventory. Use argument \"items\" to attempt to equip all the items in the room\n"
 				+ "\n"
-				+ "\"drop <body location> | <item name>\"\n"
-				+ "Remove an item from the given body location, or if the item specified is on your body, "
-				+ "or in your inventory, The item will be placed in the room the player is currently in.");
+				+ "\"drop <body location>\"\n"
+				+ "Remove an item from the given body location. For items in the inventory, please "
+				+ "provide an number to indicate which inventory item. The dropped item will be "
+				+ "placed in the room the player is currently in. ");
 	}
 }

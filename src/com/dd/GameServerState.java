@@ -1,6 +1,6 @@
 package com.dd;
 
-import com.dd.entities.Player;
+import com.dd.entities.*;
 import com.dd.levels.DungeonMap;
 
 import java.lang.IllegalArgumentException;
@@ -10,8 +10,12 @@ import java.util.List;
 public class GameServerState extends GameState{
     private List<Player> allRegisteredPlayers;
 
-    public GameServerState(String name, Player player, ArrayList playerList, DungeonMap map, int maxNumPlayers){
-        super(name, player, map, maxNumPlayers);
+    public GameServerState(String name, Fighter fighter, ArrayList<Player> playerList, DungeonMap map, int maxNumPlayers){
+        super(name, fighter, map, maxNumPlayers);
+    }
+    
+    public GameServerState(String name, Wizard wizard, ArrayList<Player> playerList, DungeonMap map, int maxNumPlayers){
+        super(name, wizard, map, maxNumPlayers);
     }
 
     public void registerPlayer(Player player) {

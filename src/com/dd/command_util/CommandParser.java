@@ -2,10 +2,9 @@ package com.dd.command_util;
 
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
-import com.dd.command_util.CommandHandler.InvalidArgumentException;
 import com.dd.controller_util.controller.RunningGameController;
 import com.dd.entities.*;
-import com.dd.entities.Player.InventoryException;
+import com.dd.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,17 +14,21 @@ public class CommandParser {
     private Map<String, CommandHandler> commandMap = new HashMap<String, CommandHandler>();
     private CommandOutputLog outputLog;
     private String input;
-    private Player player;
+    private Wizard wizard;
+    private Fighter fighter;
+    private PlayerType playerType = PlayerType.NONE; 
 
     public CommandParser(){}
     
     public CommandParser(CommandOutputLog outputLog, GameState game) {
         this.outputLog = outputLog;
         if(game.getActivePlayer() instanceof Fighter) {
-        	player = (Fighter) game.getActivePlayer();
+        	fighter = (Fighter) game.getActivePlayer();
+        	playerType = PlayerType.FIGHTER;
         }
         else if(game.getActivePlayer() instanceof Wizard) {
-        	player = (Wizard) game.getActivePlayer();
+        	wizard = (Wizard) game.getActivePlayer();
+        	playerType = PlayerType.WIZARD;
         }
     }
     
@@ -38,7 +41,12 @@ public class CommandParser {
     		throw new InvalidCommandException("You cannot start a command with a space. ");
     	}
     	outputLog.printToLog("\n" + RunningGameController.printLnTitle('~', "", 72));
-    	outputLog.printToLog(player.titleToString() + ">> " + input + "\n");
+    	if(playerType == PlayerType.FIGHTER) {
+    		outputLog.printToLog(fighter.titleToString() + ">> " + input + "\n");
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		outputLog.printToLog(wizard.titleToString() + ">> " + input + "\n");
+    	}
     	outputLog.printToLog(RunningGameController.printLnTitle('~', " Dungeon Master ", 72));
     	
     	String command = "";
@@ -100,7 +108,7 @@ public class CommandParser {
     		handler.handleCommand(command, args, outputLog);
     	}
     	catch (InvalidArgumentException | InventoryException E) {    		
-    		outputLog.printToLog(E.toString());
+    		outputLog.printToLog(E.getMessage());
     	}
     }
     
@@ -157,15 +165,4 @@ public class CommandParser {
     public void setOutputLog(CommandOutputLog outputLog){
         this.outputLog = outputLog;
     }
-
-    public class InvalidCommandException extends Exception {
-    	public InvalidCommandException(String message){
-    		super(message);
-		}
-    	
-    	@Override
-		public String toString() {
-			return super.toString().substring(59);
-		}
-	}
 }

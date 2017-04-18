@@ -3,18 +3,18 @@ package com.dd.command_util.command;
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
+import com.dd.entities.Fighter;
 import com.dd.entities.Player;
+import com.dd.entities.PlayerType;
+import com.dd.entities.Wizard;
+import com.dd.exceptions.*;
 import com.dd.levels.Direction;
-import com.dd.levels.DungeonMap;
 import com.dd.levels.MapPosition;
 
 public class MoveCommand extends CommandHandler {
-	private Player player;
-	private DungeonMap map;
 
     public MoveCommand(GameState gameState) {
-    	player = gameState.getActivePlayer();
-    	map = gameState.getMap();
+    	super(gameState);
 	}
 
     @Override
@@ -23,17 +23,23 @@ public class MoveCommand extends CommandHandler {
     		throw new InvalidArgumentException("Choose a direction to move. "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
     	}
-//WE CAN'T DO THIS EXCEPTION WITHOUT QUOTES
-//    	if(args.length > 2) {
-//    		throw new InvalidArgumentException("Type \"help\" for help using the " + commandName +" command. ");
-//    	}
+    	Player player = updateState();
+		if(playerType == PlayerType.FIGHTER) {
+    		player = (Fighter) player;
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		player = (Wizard) player; 
+    	}
+    	else {
+    		throw new NoPlayerClassException("No player class in CommandHandler. ");
+    	}
 		MapPosition position = player.getPostion();
     	switch(args[0].toLowerCase()) {
     	case "north": 
-			if(map.isRoomInDir(position, Direction.NORTH)){
-					position.moveNorth();
-					outputLog.printToLog("The " + player.titleToString() + " has moved through the North door. ");
-					outputLog.printToLog(map.getRoom(player.getPostion()).enterRoomText());
+			if(dungeonMap.isRoomInDir(position, Direction.NORTH)){
+				position.moveNorth();
+				outputLog.printToLog("The " + player.titleToString() + " has moved through the North door. ");
+				outputLog.printToLog(dungeonMap.getRoom(player.getPostion()).enterRoomText());
 			}
 			else{
 				outputLog.printToLog("No North Door! ");
@@ -41,10 +47,10 @@ public class MoveCommand extends CommandHandler {
 			break;
 		
     	case "south": 
-			if(map.isRoomInDir(position, Direction.SOUTH)){
+			if(dungeonMap.isRoomInDir(position, Direction.SOUTH)){
 				position.moveSouth();
 				outputLog.printToLog(player.titleToString() + " has moved through the South door. ");
-				outputLog.printToLog(map.getRoom(player.getPostion()).enterRoomText());
+				outputLog.printToLog(dungeonMap.getRoom(player.getPostion()).enterRoomText());
 			}
 			else{
 				outputLog.printToLog("No South Door! ");
@@ -52,10 +58,10 @@ public class MoveCommand extends CommandHandler {
 			break;
 		
     	case "east": 
-			if(map.isRoomInDir(position, Direction.EAST)){
+			if(dungeonMap.isRoomInDir(position, Direction.EAST)){
 				position.moveEast();
 				outputLog.printToLog(player.titleToString() + " has moved through the East door. ");
-				outputLog.printToLog(map.getRoom(player.getPostion()).enterRoomText());
+				outputLog.printToLog(dungeonMap.getRoom(player.getPostion()).enterRoomText());
 			}
 			else{
 				outputLog.printToLog("No East Door! ");
@@ -63,10 +69,10 @@ public class MoveCommand extends CommandHandler {
 			break;
 		
     	case "west": 
-			if(map.isRoomInDir(position, Direction.WEST)){
+			if(dungeonMap.isRoomInDir(position, Direction.WEST)){
 				position.moveWest();
 				outputLog.printToLog(player.titleToString() + " has moved through the West door. ");
-				outputLog.printToLog(map.getRoom(player.getPostion()).enterRoomText());
+				outputLog.printToLog(dungeonMap.getRoom(player.getPostion()).enterRoomText());
 			}
 			else{
 				outputLog.printToLog("No West Door! ");

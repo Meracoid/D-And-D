@@ -3,33 +3,36 @@ package com.dd.command_util.command;
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
 import com.dd.command_util.CommandOutputLog;
+import com.dd.entities.Fighter;
 import com.dd.entities.Monster;
 import com.dd.entities.Player;
+import com.dd.entities.PlayerType;
+import com.dd.entities.Wizard;
+import com.dd.exceptions.*;
 import com.dd.items.Item;
-import com.dd.levels.DungeonMap;
-import com.dd.levels.Room;
-import com.dd.levels.Room.UnknownItemException;
 
 public class ExamineCommand extends CommandHandler {
-	private Player player;
-	private DungeonMap map;
 
     public ExamineCommand(GameState gameState) {
-    	player = gameState.getActivePlayer();
-    	map = gameState.getMap();
+    	super(gameState);
 	}
 
     @Override
     public void handleCommand(String commandName, String[] args, CommandOutputLog outputLog) throws InvalidArgumentException {
     	if(args[0] == null) {
-    		throw new InvalidArgumentException("Choose something to examine. "
+    		throw new InvalidArgumentException("Choose something to " + commandName + ". "
     				+ "Type \"help\" for help using the " + commandName +" command. ");
     	}
-//WE CAN'T DO THIS EXCEPTION WITHOUT QUOTES
-//    	if(args.length > 2) {
-//    		throw new InvalidArgumentException("Type \"help\" for help using the " + commandName +" command. ");
-//    	}
-    	Room room = map.getRoom(player.getPostion());
+    	Player player = updateState();
+		if(playerType == PlayerType.FIGHTER) {
+    		player = (Fighter) player;
+    	}
+    	else if(playerType == PlayerType.WIZARD) {
+    		player = (Wizard) player; 
+    	}
+    	else {
+    		throw new NoPlayerClassException("No player class in CommandHandler. ");
+    	}
     	switch(args[0].toLowerCase()) {
     	case "room":
 			outputLog.printToLog(room.enterRoomText());
@@ -50,7 +53,7 @@ public class ExamineCommand extends CommandHandler {
 		case "item":
 		case "items":
 			if(room.hasItems()) {
-				room.getItemList().values().forEach((v) -> outputLog.printToLog(
+				room.getItemMap().values().forEach((v) -> outputLog.printToLog(
 						v.titleToString() + " "
 						+ v.examineToString() + "\n"));
 			}
@@ -60,14 +63,14 @@ public class ExamineCommand extends CommandHandler {
 			break;
 		
 		default:
-			if(room.getMonster(args[0]) != null) {
-				Monster monster = room.getMonster(args[0]);
-				outputLog.printToLog(
-						monster.titleToString() +". "
-						+ "\nHealth: " + monster.getStats().getHealth()
-						+ "\nAttack/Defense: " + monster.getStats().getAttack() + "/" + monster.getStats().getDefense()
-						+ monster.examineText());
-			}
+//			if(room.getMonster(args[0]) != null) {
+//				Monster monster = room.getMonster(args[0]);
+//				outputLog.printToLog(
+//						monster.titleToString() +". "
+//						+ "\nHealth: " + monster.getStats().getHealth()
+//						+ "\nAttack/Defense: " + monster.getStats().getAttack() + "/" + monster.getStats().getDefense()
+//						+ monster.examineText());
+//			}
 			try{
 				Item item = room.getItem(args[0]);
 				outputLog.printToLog(item.titleToString() + " "
@@ -75,9 +78,22 @@ public class ExamineCommand extends CommandHandler {
 				break;
 			}
 			catch(UnknownItemException UIE) {
-				outputLog.printToLog(UIE.toString());
+				outputLog.printToLog(UIE.getMessage());
     			return;
 			}
     	}
+    	if(room.hasMonster()) {
+    		Monster monster = room.getMonster();
+			room.getMonsterList().values().forEach((v) -> outputLog.printToLog(
+					v.titleToString()
+					+ "\nHealth: " + v.getStats().getHealth()
+					+ "\nAttack/Defense: " + v.getStats().getAttack() + "/" + v.getStats().getDefense()
+					+ "\n" + v.examineText()));
+			monster.attack(player);
+			outputLog.printToLog(player.getText());
+		}
+		else {
+			outputLog.printToLog("There are no monsters in this room. ");
+		}
 	}
 }

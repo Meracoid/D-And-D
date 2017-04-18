@@ -4,19 +4,20 @@ public class Stats {
 	
 	private int health;
 	private int maxHealth;
+	
 	private int attack;
 	private int defense;
 	
 	public Stats(int health, int maxHealth, int attack, int defense) {
-		setHealth(health);
 		setMaxHealth(maxHealth);
+		setHealth(health);
 		setAttack(attack);
 		setDefense(defense);
 	}
 	
 	public void changeStat(Stats statChange){
-		addHealth(statChange.getHealth());
 		addMaxHealth(statChange.getMaxHealth());
+		addHealth(statChange.getHealth());
 		addAttack(statChange.getAttack());
 		addDefense(statChange.getDefense());
 	}
@@ -26,10 +27,7 @@ public class Stats {
 	}
 	
 	public void addHealth(int healthInc){
-		health += healthInc;
-		if(health > maxHealth){
-			health = maxHealth;
-		}
+		setHealth(getHealth() + healthInc);
 	}
 	
 	public void addAttack(int attackInc){
@@ -45,9 +43,6 @@ public class Stats {
 	}
 	
 	public void setMaxHealth(int maxHealth) {
-		if(maxHealth < 0){
-			maxHealth = 0;
-		}
 		this.maxHealth = maxHealth;
 	}
 	
@@ -56,8 +51,8 @@ public class Stats {
 	}
 	
 	public void setHealth(int health) {
-		if(health < 0){
-			this.health = 0;
+		if(health > maxHealth){
+			this.health = getMaxHealth();
 		}
 		else{
 			this.health = health;
@@ -69,12 +64,7 @@ public class Stats {
 	}
 	
 	public void setAttack(int attack) {
-		if(attack < 0){
-			this.attack = 0;
-		}
-		else{
-			this.attack = attack;
-		}
+		this.attack = attack;
 	}
 	
 	public int getDefense() {
@@ -82,12 +72,7 @@ public class Stats {
 	}
 	
 	public void setDefense(int defense) {
-		if(defense < 0){
-			this.defense = 0;
-		}
-		else{
-			this.defense = defense;
-		}
+		this.defense = defense;
 	}
 	
 	@Override

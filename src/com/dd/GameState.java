@@ -1,6 +1,7 @@
 package com.dd;
 
 import com.dd.entities.*;
+import com.dd.exceptions.NoPlayerClassException;
 import com.dd.levels.DungeonMap;
 import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
@@ -8,42 +9,48 @@ import java.util.List;
 
 public class GameState {
     protected String name;
-	protected Player activePlayer;
+	protected Fighter activeFighter;
+	protected Wizard activeWizard;
+	protected PlayerType playerType;
 	protected int maxNumPlayers;
     protected List<Player> allActivePlayers = new ArrayList<Player>();
 	protected DungeonMap map;
 	
-	public GameState(String name, Player activePlayer, DungeonMap map, int maxNumPlayers) {
-	    this.name = name;
-	    if(activePlayer instanceof Fighter) {
-	    	this.activePlayer = (Fighter) activePlayer;
-	    }
-	    else if(activePlayer instanceof Wizard) {
-	    	this.activePlayer = (Wizard) activePlayer;
-	    }
-	    else {
-	    	this.activePlayer = activePlayer;
-	    }
+	public GameState(String name, Fighter newFighter, DungeonMap map, int maxNumPlayers) {
+	    this.name = name;	    
+	   	this.activeFighter = newFighter;
+	   	this.playerType = PlayerType.FIGHTER;
         this.maxNumPlayers = maxNumPlayers;
         allActivePlayers = new ArrayList<Player>();
         this.map = map;
 	}
-
-	public GameState(String name, Player activePlayer, DungeonMap map) {
-        this.name = name;
-        if(activePlayer instanceof Fighter) {
-	    	this.activePlayer = (Fighter) activePlayer;
-	    }
-	    else if(activePlayer instanceof Wizard) {
-	    	this.activePlayer = (Wizard) activePlayer;
-	    }
-	    else {
-	    	this.activePlayer = activePlayer;
-	    }
+	
+	public GameState(String name, Wizard newWizard, DungeonMap map, int maxNumPlayers) {
+	    this.name = name;	    
+	   	this.activeWizard = newWizard;
+	   	this.playerType = PlayerType.WIZARD;
+        this.maxNumPlayers = maxNumPlayers;
+        allActivePlayers = new ArrayList<Player>();
+        this.map = map;
+	}
+	
+	public GameState(String name, Fighter newFighter, DungeonMap map) {
+	    this.name = name;	    
+	   	this.activeFighter = newFighter;
+	   	this.playerType = PlayerType.FIGHTER;
         this.maxNumPlayers = 1;
         allActivePlayers = new ArrayList<Player>();
         this.map = map;
-    }
+	}
+	
+	public GameState(String name, Wizard newWizard, DungeonMap map) {
+	    this.name = name;	    
+	   	this.activeWizard = newWizard;
+	   	this.playerType = PlayerType.WIZARD;
+        this.maxNumPlayers = 1;
+        allActivePlayers = new ArrayList<Player>();
+        this.map = map;
+	}
 	
 	public GameState(String name, DungeonMap map) {
         this.name = name;
@@ -53,21 +60,47 @@ public class GameState {
     }
 
     public Player getActivePlayer() {
-    	if(activePlayer instanceof Fighter) {
-    		return (Fighter) activePlayer;
+    	if(playerType == PlayerType.FIGHTER) {
+    		return (Fighter) activeFighter;
     	}
-    	else if(activePlayer instanceof Wizard) {
-    		return (Wizard) activePlayer;
+    	else if(playerType == PlayerType.WIZARD) {
+    		return (Wizard) activeWizard;
     	}
-    	return activePlayer;
+    	else {
+    		throw new NoPlayerClassException("No player type. ");
+    	}
+    }
+    
+    public Fighter getActiveFighter() {
+    	return activeFighter;
+    }
+    
+    public Wizard getActiveWizard() {
+    	return activeWizard;
+    }
+    
+    public Player getActivePlayer(PlayerType Type) {
+    	if(Type == PlayerType.FIGHTER) {
+    		return (Fighter) activeFighter;
+    	}
+    	else if(Type == PlayerType.WIZARD) {
+    		return (Wizard) activeWizard;
+    	}
+    	else {
+       		throw new NoPlayerClassException("No player type. ");
+    	}
     }
     
     public void setActivePlayer(Fighter fighter) {
-    	activePlayer = fighter;
+    	activeFighter = fighter;
     }
     
     public void setActivePlayer(Wizard wizard) {
-    	activePlayer = wizard;
+    	activeWizard = wizard;
+    }
+    
+    public PlayerType getPlayerType() {
+    	return playerType;
     }
 
     public List<Player> getPlayerList() {
