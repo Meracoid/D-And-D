@@ -37,6 +37,15 @@ public class JoinGameController extends GameSceneController{
 	@FXML
 	private void nextButtonJoinAction(ActionEvent event) throws IOException{
 		if(listItemIsClicked()){
+			ControllerArgumentPackage serverGame= new ControllerArgumentPackage();
+			String listName= (String)netGameList.getSelectionModel().getSelectedItem();
+			int x0= listName.lastIndexOf(" ");
+			int x1= listName.lastIndexOf("\n");
+			String gameName= listName.substring(11, x1);
+			String ipAddressNumber=listName.substring(x0+1);
+			serverGame.setArgument("GameName", gameName);
+			serverGame.setArgument("GameAddress", ipAddressNumber);
+			DandD.setActiveGameScene("JoinGameScene", serverGame);
 			DandD.setActiveGameScene("CharacterCreationScene", null);
 		}
 	}
@@ -66,9 +75,11 @@ public class JoinGameController extends GameSceneController{
 	}
     @Override
     public void setup(ControllerArgumentPackage args){
-    	String gameName= args.getArgument("ServerName");
-    	String ipAddress= args.getArgument("IPAddress");
-    	addNetGames(gameName,ipAddress);
+    	if(args!=null){
+    		String gameName= args.getArgument("ServerName");
+    		String ipAddress= args.getArgument("IPAddress");
+    		addNetGames(gameName,ipAddress);
+    	}
     }
 
     @Override
