@@ -34,18 +34,17 @@ public class CharacterCreationController extends GameSceneController{
 	}
 	@FXML
 	private void startGameAction(ActionEvent event){
-		JoinGameController joinGame=new JoinGameController();
-		String item=joinGame.netGameList.getSelectionModel().getSelectedItem().toString();
-		String gameName= item.substring(11, item.indexOf("\n"));
 		
 		ControllerArgumentPackage args = new ControllerArgumentPackage();
+		String gameName=args.getArgument("GameName");
+		String addressNumber=args.getArgument("GameAddress");
 		args.setArgument("GameState", gameName);
 
 		DandD.setActiveGameScene("RunningGameScene", args);
 	}
     @Override
     public void setup(ControllerArgumentPackage args){
-
+    	
     }
 
     @Override
