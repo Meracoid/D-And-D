@@ -24,18 +24,7 @@ public class GameState implements Serializable {
 	}
 
 	public GameState(String name, Player activePlayer, DungeonMap map) {
-        this.name = name;
-        this.activePlayer = activePlayer;
-        this.maxNumPlayers = 1;
-        allActivePlayers = new ArrayList<Player>();
-        this.map = map;
-    }
-	
-	public GameState(String name, DungeonMap map) {
-        this.name = name;
-        this.maxNumPlayers = 1;
-        allActivePlayers = new ArrayList<Player>();
-        this.map = map;
+        this(name, activePlayer, map, 1);
     }
 
     public Player getActivePlayer() {
