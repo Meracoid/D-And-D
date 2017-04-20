@@ -28,21 +28,11 @@ public class GameState implements Serializable {
     }
 
     public Player getActivePlayer() {
-    	if(activePlayer instanceof Fighter) {
-    		return (Fighter) activePlayer;
-    	}
-    	else if(activePlayer instanceof Wizard) {
-    		return (Wizard) activePlayer;
-    	}
     	return activePlayer;
     }
     
-    public void setActivePlayer(Fighter fighter) {
-    	activePlayer = fighter;
-    }
-    
-    public void setActivePlayer(Wizard wizard) {
-    	activePlayer = wizard;
+    public void setActivePlayer(Player player) {
+        activePlayer = player;
     }
 
     public List<Player> getPlayerList() {

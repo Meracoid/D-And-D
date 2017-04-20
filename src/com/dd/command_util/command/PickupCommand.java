@@ -46,38 +46,7 @@ public class PickupCommand extends CommandHandler {
 					outputLog.printToLog(UIE.getMessage());
 				}
 	    		try {
-	    			if(item instanceof Artifact) {
-						item = (Artifact) item;
-						player.equip((Artifact) item);
-					}
-					else if(item instanceof Magical) {
-						item = (Magical) item;
-						player.equip((Magical) item);
-					}
-					else if(item instanceof OneHandedWeapon) {
-						item = (OneHandedWeapon) item;
-						player.equip((OneHandedWeapon) item);
-					}
-					else if(item instanceof Potion) {
-						item = (Potion) item;
-						player.equip((Potion) item);
-					}
-					else if(item instanceof Shield) {
-						item = (Shield) item;
-						player.equip((Shield) item);
-					}
-					else if(item instanceof Suit) {
-						item = (Suit) item;
-						player.equip((Suit) item);
-					}
-					else if(item instanceof TwoHandedWeapon) {
-						item = (TwoHandedWeapon) item;
-						player.equip((TwoHandedWeapon) item);
-					}
-					else {
-						outputLog.printToLog(item.getName() + " could not be equipped "
-								+ "because it has not item type. ");
-					}
+	    			player.equip(item);
 	    			if(player.isEquipSuccess()) {
 	    				equippedItemNames.add(itemName);
 	    			}
@@ -109,38 +78,7 @@ public class PickupCommand extends CommandHandler {
 				throw new InvalidArgumentException("The item \"" + args[0] + "\" is not in this room. ");
 			}
 			try {
-				if(item instanceof Artifact) {
-					item = (Artifact) item;
-					player.equip((Artifact) item);
-				}
-				else if(item instanceof Magical) {
-					item = (Magical) item;
-					player.equip((Magical) item);
-				}
-				else if(item instanceof OneHandedWeapon) {
-					item = (OneHandedWeapon) item;
-					player.equip((OneHandedWeapon) item);
-				}
-				else if(item instanceof Potion) {
-					item = (Potion) item;
-					player.equip((Potion) item);
-				}
-				else if(item instanceof Shield) {
-					item = (Shield) item;
-					player.equip((Shield) item);
-				}
-				else if(item instanceof Suit) {
-					item = (Suit) item;
-					player.equip((Suit) item);
-				}
-				else if(item instanceof TwoHandedWeapon) {
-					item = (TwoHandedWeapon) item;
-					player.equip((TwoHandedWeapon) item);
-				}
-				else {
-					outputLog.printToLog(item.getName() + " could not be equipped "
-							+ "because it has not item type. ");
-				}
+				player.equip(item);
     		}
 			catch(EquipmentException | InventoryException E) {
     			outputLog.printToLog(E.getMessage());
