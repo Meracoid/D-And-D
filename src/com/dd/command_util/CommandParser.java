@@ -21,12 +21,7 @@ public class CommandParser {
     
     public CommandParser(CommandOutputLog outputLog, GameState game) {
         this.outputLog = outputLog;
-        if(game.getActivePlayer() instanceof Fighter) {
-        	player = (Fighter) game.getActivePlayer();
-        }
-        else if(game.getActivePlayer() instanceof Wizard) {
-        	player = (Wizard) game.getActivePlayer();
-        }
+        this.player = game.getActivePlayer();
     }
     
     public void parse(String userInput) throws InvalidCommandException{
