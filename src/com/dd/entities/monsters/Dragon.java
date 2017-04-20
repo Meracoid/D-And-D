@@ -72,7 +72,7 @@ public class Dragon extends Monster {
     public String confrontText() {
         return "As you enter the large room, the first thing that catches your eye is jewels, mostly " + dragColor
                 + ". As you walk around the abnormally large room, you hear a faint hum behind you. As you turn around, "
-                + "a giant " + dragColor + " scaled dragon faces you, nostrils flared. \"Fool! You think you could steal"
+                + "a giant " + dragColor + " scaled dragon faces you, nostrils flared. \"Fool! You think you could steal "
                 + "from " + titleToString() + " dragon? For this, you shall die!\". ";
     }
 
