@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.dd.Stats;
 
-public class Item implements Serializable {
+public abstract class Item implements Serializable {
 	
 	protected String name;
 	protected Stats StatModifyer;
