@@ -34,6 +34,18 @@ public class JoinGameController extends GameSceneController{
 	ListView netGameList;
 	@FXML
 	Label errorLable;
+	private ObservableList<String> items=FXCollections.observableArrayList();
+	@FXML
+	Button deleteItem;
+	@FXML
+	private void deleteItemAction(ActionEvent event) throws IOException{
+		if(listItemIsClicked()){
+			int index = netGameList.getSelectionModel().getSelectedIndex();
+			items.remove(index);
+			netGameList.setItems(items);
+			errorLable.setText("");
+		}
+	}
 	@FXML
 	private void nextButtonJoinAction(ActionEvent event) throws IOException{
 		if(listItemIsClicked()){
@@ -45,8 +57,7 @@ public class JoinGameController extends GameSceneController{
 			String ipAddressNumber=listName.substring(x0+1);
 			serverGame.setArgument("GameName", gameName);
 			serverGame.setArgument("GameAddress", ipAddressNumber);
-			DandD.setActiveGameScene("JoinGameScene", serverGame);
-			DandD.setActiveGameScene("CharacterCreationScene", null);
+			DandD.setActiveGameScene("CharacterCreationScene", serverGame);
 		}
 	}
 	@FXML
@@ -62,25 +73,26 @@ public class JoinGameController extends GameSceneController{
 			errorLable.setText("No net games at this point. Please try again later.");
 			return false;
 		}
-		else if(!netGameList.isPressed()){
-			errorLable.setText("Please select a net game to join.");
+		else if(netGameList.getSelectionModel().getSelectedIndex()==-1) {
+			errorLable.setText("Please select a net game to join or delete.");
 			return false;
 		}
 		return true;
 	}
 	public void addNetGames(String gameName, String ipAddress){
-		ObservableList<String> items =FXCollections.observableArrayList (
-			    "Game Name: "+gameName+"\nIP Address: "+ipAddress);
+		items.add("Game Name: "+gameName+"\nIP Address: "+ipAddress);
 		netGameList.setItems(items);
 	}
     @Override
     public void setup(ControllerArgumentPackage args){
-    	if(args!=null){
-    		String gameName= args.getArgument("ServerName");
-    		String ipAddress= args.getArgument("IPAddress");
-    		addNetGames(gameName,ipAddress);
-    	}
-    }
+    	if(args!=null) {
+			String gameName = args.getArgument("ServerName");
+			String ipAddress = args.getArgument("IPAddress");
+			addNetGames(gameName, ipAddress);
+		}
+    	errorLable.setText("");
+    	netGameList.getSelectionModel().select(-1);
+	}
 
     @Override
     public void teardown(){
