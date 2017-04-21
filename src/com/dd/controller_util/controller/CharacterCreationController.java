@@ -29,22 +29,34 @@ public class CharacterCreationController extends GameSceneController{
 	@FXML
 	Button startGame;
 	@FXML
+	Label errorLable;
+	String gameName;
+	String addressNumber;
+	@FXML
 	private void backButtonAction(ActionEvent event){
 		DandD.setActiveGameScene("JoinGameScene", null);
 	}
 	@FXML
 	private void startGameAction(ActionEvent event){
-		
-		ControllerArgumentPackage args = new ControllerArgumentPackage();
-		String gameName=args.getArgument("GameName");
-		String addressNumber=args.getArgument("GameAddress");
-		args.setArgument("GameState", gameName);
-
-		DandD.setActiveGameScene("RunningGameScene", args);
+		if(checkFields()){
+			//Implement when you try to start to game.
+		}
+	}
+	private boolean checkFields(){
+		if (playerNameField.getText().equals("")) {
+			errorLable.setText("Please enter a character name.");
+			return false;
+		}
+		else if (characterClass.getSelectedToggle() == null) {
+			errorLable.setText("Please select a character class.");
+			return false;
+		}
+		return true;
 	}
     @Override
     public void setup(ControllerArgumentPackage args){
-    	
+		gameName=args.getArgument("GameName");
+		addressNumber=args.getArgument("GameAddress");
     }
 
     @Override
