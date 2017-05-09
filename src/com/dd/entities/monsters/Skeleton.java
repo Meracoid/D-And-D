@@ -21,19 +21,18 @@ public class Skeleton extends Monster {
             this.stats.setHealth(1);
             this.stats.setAttack(this.stats.getAttack() - 1);
             this.stats.setDefense(this.stats.getDefense() - 1);
-            print("As you deal a deadly blow, the skeleton hastily tries to keep itself together, "
-            		+ "losing some pieces in the process. ");
+            text += "As you deal a deadly blow, the skeleton hastily tries to keep itself together, losing some pieces in the process. ";
         }
         else {
             super.die();
-            print("The skeleton falls into a pile of ash at your feet. ");
+            text += "The skeleton falls into a pile of ash at your feet. ";
         }
     }
 
     @Override
     public void attack(Entity player) {
-    	print("The skeleton throws itself at you. ");
-    	super.attack(player);
+    	String altText = "The skeleton throws itself at you. ";
+    	super.attack(player, altText);
     }
     
 

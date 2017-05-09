@@ -126,9 +126,7 @@ public class Wizard extends Player {
 					+ " could not be equipped because "
 					+ "wizards cannot use " + item.getType() + "s. ");
 		}
-		if(!(item instanceof Potion)){
-			changeStats(item.getStatChange());
-		}
+		changeStats(item.getStatChange());
 	}
 
 }

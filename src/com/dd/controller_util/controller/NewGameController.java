@@ -2,13 +2,20 @@ package com.dd.controller_util.controller;
 
 import com.dd.DandD;
 import com.dd.GameState;
+import com.dd.GameType;
 import com.dd.controller_util.ControllerArgumentPackage;
 import com.dd.controller_util.GameSceneController;
 import com.dd.entities.*;
 import com.dd.entities.players.Fighter;
 import com.dd.entities.players.Wizard;
 import com.dd.levels.*;
+
+import java.nio.channels.Pipe;
 import java.util.Random;
+
+import com.dd.network.GameServer;
+import com.dd.network.PipeCommChannel;
+import com.dd.network.ServerGameState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -45,7 +52,24 @@ public class NewGameController extends GameSceneController{
 		GameState game = null;
 		ControllerArgumentPackage args = new ControllerArgumentPackage();
 
-		game = new GameState(saveName.getText(), player, map);		
+		if(networkPlay.isSelected()) {
+			try {
+				game = new ServerGameState(saveName.getText(), player, map);
+				Pipe commPipe = Pipe.open();
+				PipeCommChannel commChannel = new PipeCommChannel(commPipe.source(), commPipe.sink());
+				GameServer server = new GameServer((ServerGameState)game, player, commChannel);
+				server.start();
+				args.setArgument("GameType", GameType.NET_SERVER);
+				args.setArgument("CommChannel", commChannel);
+			}
+			catch(Exception e){
+				System.exit(1);
+			}
+		}
+		else{
+			game = new GameState(saveName.getText(), player, map);
+			args.setArgument("GameType", GameType.LOCAL);
+		}
 		args.setArgument("GameState", game);
 
 		DandD.setActiveGameScene("RunningGameScene", args);

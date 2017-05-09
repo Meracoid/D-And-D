@@ -19,14 +19,14 @@ public class Zombie extends Monster {
         Random random = new Random();
         if(!conSave) {
             super.attack(player, 2);
-            print("The stench of the zombie causes you to lower your defenses slightly. ");
+            text += "The stench of the zombie causes you to lower your defenses slightly. ";
             if(random.nextInt(3) + 1 == 4) {
                 conSave = true;
-                print("However you find the strength to power through it. ");
+                text += "However you find the strength to power through it. ";
             }
         }
-        print("The zombie lunges at you and slashes with its claws. ");
-        print("The zombie lunges at you and sinks its teeth into your skin. ");
+        text += "The zombie lunges at you and slashes with its claws. ";
+        text += "The zombie lunges at you and sinks its teeth into your skin. ";
         super.attack(player);
     }
 
@@ -38,17 +38,17 @@ public class Zombie extends Monster {
         while(deathCounterCopy != 0) {
             int roll = random.nextInt(3) + 1;
             if(roll == 4) {
-                print("As you deal a fatal blow, the zombie's eyes breath undead life once again. ");
+                text += "As you deal a fatal blow, the zombie's eyes breath undead life once again. ";
                 this.stats.setHealth(3);
                 deathCounter++;
                 return;
             }
             deathCounterCopy--;
         }
-        print("(if wizard) As you cast your final spell, exhausted by the fight, you find "
-        		+ "the zombie moves no more. The battle is won. ");
-        print("(if fighter) You raise your weapon and take to the zombie's head. As it rolls "
-        		+ "onto the ground, you breath a sigh of relief. The battle is won. ");
+        text += "(if wizard) As you cast your final spell, exhausted by the fight, you find "
+        		+ "the zombie moves no more. The battle is won. ";
+        text += "(if fighter) You raise your weapon and take to the zombie's head. As it rolls "
+        		+ "onto the ground, you breath a sigh of relief. The battle is won. ";
         super.die();
     }
 

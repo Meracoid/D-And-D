@@ -9,44 +9,70 @@ import com.dd.levels.Room;
 public abstract class CommandHandler {
 	
 	protected GameState gameState;
-	public static boolean examineMonster;
-	public static boolean monsterAttack = true;
+	protected DungeonMap dungeonMap;
+	protected static Room room;
+	protected static Player player;
+	protected static Monster monster;
+	protected static CommandOutputLog globalOutput;
+	protected static boolean examineMonster;
+	protected static boolean monsterAttack = true;
+	protected boolean dead = false;
 	
 	public CommandHandler(GameState gameState) {
     	initGameState(gameState);
 	}
 	
-	public abstract void handleCommand(String commandName, String[] args) throws InvalidArgumentException;
+	public abstract void handleCommand(String commandName, String[] args, CommandOutputLog output) throws InvalidArgumentException;
 
 	protected void initGameState(GameState activeState) {
 		this.gameState = activeState;
+    	this.dungeonMap = gameState.getMap();
+    	updateState();
+	}
+	
+	protected void updateState() {
+		player = gameState.getActivePlayer();
+		room = dungeonMap.getRoom(player.getPostion());
+		try {
+			monster = room.getMonster();
+		}
+		catch (NullMonsterException NME) {
+			monster = null;
+			//globalOutput.print(NME.getMessage());
+		}
+		if(player.isDead()){
+			dead = true;
+		}
+	}
+
+	public void setGlobalOutput(CommandOutputLog outputLog) {
+		globalOutput = outputLog;
 	}
 	
 	public void monsterAttack() {
-		monster().attack(player());
+		updateState();
+		if(room.hasMonster() && monsterAttack && !isDead()) {
+			try {
+	    		monster = room.getMonster();
+	    		monster.clearText();
+				monster.attack(player);
+				globalOutput.print(monster.getText() + "\n");
+				if(examineMonster) {
+					globalOutput.print(room.examineMonster());
+				}
+			}
+			catch(NullMonsterException NME) {
+				globalOutput.print(NME.getMessage());
+			}
+		}
+		monsterAttack = true;
 	}
 	
-	protected Player player() {
-		return gameState.getActivePlayer();
-	}
-	
-	protected DungeonMap map() {
-		return gameState.getMap();
-	}
-	
-	protected Room room() {
-		return map().getRoom(player().getPostion());
-	}
-	
-	protected Monster monster() {
-		return room().getMonster();
+	public void setPlayer(Player player){
+		this.player = player;
 	}
 
-	protected boolean isDead() {
-		return player().isDead();
+	public boolean isDead() {
+		return dead;
 	}
-	
-	protected static void print(String text) {
-    	CommandOutputLog.print(text);
-    }
 }

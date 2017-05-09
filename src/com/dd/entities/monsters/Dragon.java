@@ -42,26 +42,23 @@ public class Dragon extends Monster {
 
     @Override
     public int takeDamage(int damage) {
-    	print("You take your sword and ask for a blessing from any god that will hear. You leap up and" +
+    	return super.takeDamage(damage, "You take your sword and ask for a blessing from any god that will hear. You leap up and" +
                 " with a solid heave take " + getTitle() + "! The battle is won! ");
-    	return super.takeDamage(damage);
     }
     
     @Override
     public void attack(Entity entity) {
         Random random = new Random();
         if(breathAttack){
-        	print(getTitle() + "breathes at you with a fiery breath. It's lungs look as if they collapse a bit. ");
-            super.attack(entity, 5);
+            super.attack(entity, 5, getTitle() + "breathes at you with a fiery breath. It's lungs look as if they collapse a bit. ");
             breathAttack = false;
         }else{
             if(random.nextInt(5) + 1 == 6){
-                print("Before it attacks you, it regains composure in its lungs, readying its breath attack. ");
+                text += "Before it attacks you, it regains composure in its lungs, readying its breath attack. ";
                 breathAttack = true;
             }
         }
-        print("It takes its claws out to slash at you, a fiery passion in its eyes. ");
-        super.attack(entity);
+        super.attack(entity, "It takes its claws out to slash at you, a fiery passion in its eyes. ");
     }
     
     @Override
