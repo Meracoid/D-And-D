@@ -2,6 +2,8 @@ package com.dd.command_util.command;
 
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
+import com.dd.command_util.CommandOutputLog;
+import com.dd.command_util.LocalCommandOutputLog;
 import com.dd.exceptions.*;
 import com.dd.items.Item;
 
@@ -12,9 +14,11 @@ public class ExamineCommand extends CommandHandler {
 	}
 
     @Override
-    public void handleCommand(String commandName, String[] args) throws InvalidArgumentException {
-    	if(isDead()){
-    		print(player().getTitle() + " is dead. ");
+    public void handleCommand(String commandName, String[] args, CommandOutputLog output) throws InvalidArgumentException {
+    	setGlobalOutput(output);
+    	updateState();
+    	if(dead){
+    		output.print(player.getTitle() + " is dead. ");
     		return;
     	}
     	if(args[0] == null) {
@@ -24,25 +28,28 @@ public class ExamineCommand extends CommandHandler {
     	
     	switch(args[0].toLowerCase()) {
     	case "room":
-    		print(room().examineRoom());
+    		output.print(room.examineRoom());
+    		examineMonster = false;
 			break;
     	case "monsters":
 		case "monster":
-			print(room().examineMonster());
+			output.print(room.examineMonster());
 			examineMonster = false;
 			break;
 		case "item":
 		case "items":
-			print(room().examineItems());
+			output.print(room.examineItems());
+			examineMonster = false;
 			break;
 		default:
 			try{
-				Item item = room().getItem(args[0]);
-				print(item.getTitle() + " "
+				Item item = room.getItem(args[0]);
+				output.print(item.getTitle() + " "
 						+ item.examineToString() + "\n");
+				examineMonster = false;
 			}
 			catch(NullItemException UIE) {
-				print(UIE.getMessage());
+				output.print(UIE.getMessage());
 			}
 			/*
 			 * examine <monster name> command - not needed if one monster.

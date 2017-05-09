@@ -2,6 +2,8 @@ package com.dd.command_util.command;
 
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
+import com.dd.command_util.CommandOutputLog;
+import com.dd.command_util.LocalCommandOutputLog;
 import com.dd.controller_util.controller.RunningGameController;
 import com.dd.exceptions.InvalidArgumentException;
 
@@ -12,13 +14,15 @@ public class HelpCommand extends CommandHandler {
 	}
 	
 	@Override
-	public void handleCommand(String commandName, String[] args) throws InvalidArgumentException{
+	public void handleCommand(String commandName, String[] args, CommandOutputLog output) throws InvalidArgumentException{
+		setGlobalOutput(output);
+    	updateState();
 		if(args[0] != null){
 			throw new InvalidArgumentException("The " + commandName + " command should not be followed by any arguments. ");
 		}
     	monsterAttack = false;
     	
-		print(RunningGameController.printLnTitle('~', "AVAILABLE COMMANDS", 72)
+		output.print(RunningGameController.printLnTitle('~', "AVAILABLE COMMANDS", 72)
 				+ "\"attack <name>\"\n"
 				+ "Initiate an attack against a monster or player.\n"
 				+ "\n"

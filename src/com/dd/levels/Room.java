@@ -110,7 +110,7 @@ public class Room implements Serializable {
 	}
 	
 	public String examineRoom() {
-		StringBuilder outputText = new StringBuilder("\n");
+		StringBuilder outputText = new StringBuilder();
 		if(isEmpty()){
 			outputText.append("This room is empty.");
 			return outputText.toString();
@@ -127,7 +127,7 @@ public class Room implements Serializable {
 	
 	public String examineItems() {
 		if(!hasItems()) {
-			return "\nThere are no items in this room. ";
+			return "There are no items in this room. ";
 		}
 		
 		StringBuilder outputText = new StringBuilder();
@@ -140,10 +140,10 @@ public class Room implements Serializable {
 	
 	public String examineMonster() {
 		if(!hasMonster()) {
-			return "\nThere are no monsters in this room. ";
+			return "There are no monsters in this room. ";
 		}
 		
-		StringBuilder outputText = new StringBuilder("\n");
+		StringBuilder outputText = new StringBuilder();
 		monsterMap.values().forEach((v) -> outputText.append(
 				v.getTitle()
 				+ "\nHealth: " + v.getStats().getHealth()

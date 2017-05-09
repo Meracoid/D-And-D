@@ -2,6 +2,8 @@ package com.dd.command_util.command;
 
 import com.dd.GameState;
 import com.dd.command_util.CommandHandler;
+import com.dd.command_util.CommandOutputLog;
+import com.dd.command_util.LocalCommandOutputLog;
 import com.dd.exceptions.*;
 import com.dd.levels.Direction;
 import com.dd.levels.MapPosition;
@@ -13,9 +15,11 @@ public class MoveCommand extends CommandHandler {
 	}
 
     @Override
-    public void handleCommand(String commandName, String[] args) throws InvalidArgumentException {
-    	if(isDead()){
-    		print(player().getTitle() + " is dead. ");
+    public void handleCommand(String commandName, String[] args, CommandOutputLog output) throws InvalidArgumentException {
+    	setGlobalOutput(output);
+    	updateState();
+    	if(dead){
+    		output.print(player.getTitle() + " is dead. ");
     		return;
     	}
     	if(args[0] == null) {
@@ -24,49 +28,49 @@ public class MoveCommand extends CommandHandler {
     	}
     	monsterAttack = false;
     	
-		MapPosition position = player().getPostion();
+		MapPosition position = player.getPostion();
     	switch(args[0].toLowerCase()) {
     	case "north": 
-			if(map().isRoomInDir(position, Direction.NORTH)){
+			if(dungeonMap.isRoomInDir(position, Direction.NORTH)){
 				position.moveNorth();
-				print("The " + player().getTitle() + " has moved through the North door. ");
-				print(map().getRoom(player().getPostion()).examineRoom());
+				output.print("The " + player.getTitle() + " has moved through the North door. ");
+				output.print(dungeonMap.getRoom(player.getPostion()).examineRoom());
 			}
 			else{
-				print("No North Door! ");
+				output.print("No North Door! ");
 			}
 			break;
 		
     	case "south": 
-			if(map().isRoomInDir(position, Direction.SOUTH)){
+			if(dungeonMap.isRoomInDir(position, Direction.SOUTH)){
 				position.moveSouth();
-				print(player().getTitle() + " has moved through the South door. ");
-				print(map().getRoom(position).examineRoom());
+				output.print(player.getTitle() + " has moved through the South door. ");
+				output.print(dungeonMap.getRoom(player.getPostion()).examineRoom());
 			}
 			else{
-				print("No South Door! ");
+				output.print("No South Door! ");
 			}
 			break;
 		
     	case "east": 
-			if(map().isRoomInDir(position, Direction.EAST)){
+			if(dungeonMap.isRoomInDir(position, Direction.EAST)){
 				position.moveEast();
-				print(player().getTitle() + " has moved through the East door. ");
-				print(map().getRoom(position).examineRoom());
+				output.print(player.getTitle() + " has moved through the East door. ");
+				output.print(dungeonMap.getRoom(player.getPostion()).examineRoom());
 			}
 			else{
-				print("No East Door! ");
+				output.print("No East Door! ");
 			}
 			break;
 		
     	case "west": 
-			if(map().isRoomInDir(position, Direction.WEST)){
+			if(dungeonMap.isRoomInDir(position, Direction.WEST)){
 				position.moveWest();
-				print(player().getTitle() + " has moved through the West door. ");
-				print(map().getRoom(position).examineRoom());
+				output.print(player.getTitle() + " has moved through the West door. ");
+				output.print(dungeonMap.getRoom(player.getPostion()).examineRoom());
 			}
 			else{
-				print("No West Door! ");
+				output.print("No West Door! ");
 			}
 			break;
 		
