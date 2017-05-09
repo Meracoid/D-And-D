@@ -12,8 +12,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<?import javafx.scene.control.CheckBox?>
 <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dd.controller_util.controller.NewGameController">
    <children>
       <GridPane alignment="CENTER" hgap="10.0" maxHeight="800.0" maxWidth="1000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" vgap="10.0" VBox.vgrow="ALWAYS">
@@ -59,7 +57,6 @@
                      </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="wizardRadio" mnemonicParsing="false" text="Wizard" toggleGroup="$characterClass" />
-                   <CheckBox fx:id="networkPlay" text="Networked Game"/>
                </children>
                <GridPane.margin>
                   <Insets />

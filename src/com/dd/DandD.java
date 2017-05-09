@@ -54,12 +54,6 @@ public class DandD extends Application {
             stage.setWidth(1280);
             stage.setHeight(720);
 
-            addGameSceneControllerTuple("AddServerScene",
-                                        generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/AddServer.fxml")));
-            addGameSceneControllerTuple("CharacterCreationScene",
-                                        generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/CharacterCreation.fxml")));
-            addGameSceneControllerTuple("JoinGameScene",
-                                        generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/JoinMenu.fxml")));
             addGameSceneControllerTuple("LoadGameScene",
                                         generateSceneControllerTuple(getClass().getResource("/com/dd/fxml/LoadGame.fxml")));
             addGameSceneControllerTuple("MainMenuScene",
@@ -105,9 +99,5 @@ public class DandD extends Application {
                     + "\" is not registered with the GameRunner. GameScene unchanged.");
         tuple.getController().setup(args);
         stage.setScene(tuple.getScene());
-    }
-
-    public static UUID getGameUUID(){
-        return gameUUID;
     }
 }

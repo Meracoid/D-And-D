@@ -87,7 +87,9 @@ public class Fighter extends Player {
 			throw new EquipmentException(item.getName()
 					+ " is of an unknown type. ");
 		}
-		changeStats(item.getStatChange());
+		if(!(item instanceof Potion)){
+			changeStats(item.getStatChange());
+		}
 	}
 
 }

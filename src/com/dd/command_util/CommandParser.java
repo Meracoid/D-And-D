@@ -4,6 +4,7 @@ import com.dd.GameState;
 import com.dd.controller_util.controller.RunningGameController;
 import com.dd.entities.*;
 import com.dd.exceptions.*;
+import com.dd.levels.Room;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,15 +12,15 @@ import java.util.Map;
 
 public class CommandParser {
     protected Map<String, CommandHandler> commandMap = new HashMap<String, CommandHandler>();
-    protected CommandOutputLog output;
     protected String input;
     protected Player player;
+    protected Room room;
 
     public CommandParser(){}
     
-    public CommandParser(CommandOutputLog output, GameState game) {
-        this.output = output;
+    public CommandParser(GameState game) {
         this.player = game.getActivePlayer();
+        this.room = game.getMap().getRoom(player.getPostion());
     }
     
     public void parse(String userInput) throws InvalidCommandException{
@@ -31,9 +32,9 @@ public class CommandParser {
     		throw new InvalidCommandException("You cannot start a command with a space. ");
     	}
     	
-    	output.print("\n" + RunningGameController.printLnTitle('~', "", 72));
-    	output.print(player.getTitle() + ">> " + input + "\n");
-    	output.print(RunningGameController.printLnTitle('~', " Dungeon Master ", 72));
+    	print("\n" + RunningGameController.printLnTitle('~', "", 72));
+    	print(player.getTitle() + ">> " + input + "\n");
+    	print(RunningGameController.printLnTitle('~', " Dungeon Master ", 72));
     	
     	String command = "";
     	String[] args = {null};
@@ -91,13 +92,16 @@ public class CommandParser {
                                                 + "\" is not registered with the CommandParser.");
         }
     	try {
-    		handler.handleCommand(command, args, output);
-    		if(!player.isDead()) {
+    		handler.handleCommand(command, args);
+    		if(room.hasMonster() && CommandHandler.examineMonster){
+    			print(room.examineMonster());
+    		}
+    		if(!player.isDead() && CommandHandler.monsterAttack) {
     			handler.monsterAttack();
     		}
     	}
     	catch (InvalidArgumentException E) {    		
-    		output.print(E.getMessage());
+    		print(E.getMessage());
     	}
     }
     
@@ -151,13 +155,7 @@ public class CommandParser {
                                                 + "\" has not been registered with this CommandParser. Un-registration failed.");
     }
 
-    public void setOutputLog(CommandOutputLog outputLog){
-        this.output = outputLog;
+    private static void print(String text) {
+    	CommandOutputLog.print(text);
     }
-
-    public void setPlayer(Player player){
-    	for(CommandHandler cmdHandler : commandMap.values()){
-    		cmdHandler.setPlayer(player);
-		}
-	}
 }

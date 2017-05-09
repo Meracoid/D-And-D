@@ -29,7 +29,6 @@
       </Label>
       <Separator orientation="VERTICAL" prefHeight="10.0" prefWidth="10.0" visible="false" />
       <Button fx:id="newGame" mnemonicParsing="false" onAction="#handleNewGameAction" text="New Game" />
-      <Button fx:id="joinGame" mnemonicParsing="false" onAction="#handleJoinGameAction" text="Join Game" />
       <Button fx:id="loadGame" mnemonicParsing="false" onAction="#handleLoadGameAction" text="Load Game" />
    </children>
 </VBox>

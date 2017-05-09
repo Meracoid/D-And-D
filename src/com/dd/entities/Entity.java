@@ -1,6 +1,7 @@
 package com.dd.entities;
 
 import com.dd.Stats;
+import com.dd.command_util.CommandOutputLog;
 
 import java.io.Serializable;
 
@@ -8,7 +9,6 @@ public abstract class Entity implements Serializable{
 
 	protected String name;
 	protected Stats stats;
-	protected static String text = "";
 
 	public Entity(String name, int health, int maxHealth, int attack, int defense) {
 		setName(name);
@@ -32,22 +32,12 @@ public abstract class Entity implements Serializable{
 	
 	public void attack(Entity entity) {
         int damage = entity.takeDamage(attackDamage());
-        text += getTitle() + " deals " + damage + " damage to " + entity.getTitle() + ". ";
-    }
-	
-	public void attack(Entity entity, String altText) {
-        int damage = entity.takeDamage(attackDamage());
-        text += altText + getTitle() + " deals " + damage + " damage to " + entity.getTitle() + ". ";
+        print(getTitle() + " deals " + damage + " damage to " + entity.getTitle() + ". ");
     }
 	
 	public void attack(Entity entity, int damage) {
         damage = entity.takeDamage(damage);
-        text += getTitle() + " deals " + damage + " damage to " + entity.getTitle() + ". ";
-    }
-	
-	public void attack(Entity entity, int damage, String altText) {
-        damage = entity.takeDamage(damage);
-        text += altText + getTitle() + " deals " + damage + " damage to " + entity.getTitle() + ". ";
+        print(getTitle() + " deals " + damage + " damage to " + entity.getTitle() + ". ");
     }
 	
 	public int takeDamage(int damage){
@@ -57,19 +47,7 @@ public abstract class Entity implements Serializable{
         }
 		stats.setHealth(stats.getHealth() - damageDealt);
 		if(!survives()){
-			text += getTitle() +" just died! ";
-		}
-		return damageDealt;
-	}
-	
-	public int takeDamage(int damage, String addText){
-        int damageDealt = damage - stats.getDefense();
-        if(damageDealt <= 0){
-        	damageDealt = 1;
-        }
-		stats.setHealth(stats.getHealth() - damageDealt);
-		if(!survives()){
-			text += addText+ getTitle() +" just died! ";
+			print(getTitle() +" just died! ");
 		}
 		return damageDealt;
 	}
@@ -82,11 +60,6 @@ public abstract class Entity implements Serializable{
 	}
 	
 	public void die() {
-		stats.setHealth(0);
-	}
-	
-	public void die(String addText) {
-		text += addText;
 		stats.setHealth(0);
 	}
 
@@ -122,19 +95,11 @@ public abstract class Entity implements Serializable{
 		this.stats.changeStat(statModifier);
 	}
 	
-	public String getText() {
-		return text;
-	}
-	
-	public void setText(String text) {
-		this.text = text;
-	}
-	
-	public void clearText() {
-		text = "";
-	}
-	
 	public boolean isDead() {
 		return stats.getHealth() == 0;
 	}
+	
+	protected static void print(String text) {
+    	CommandOutputLog.print(text);
+    }
 }
